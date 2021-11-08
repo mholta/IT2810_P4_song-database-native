@@ -8,7 +8,7 @@ interface SongListItemProps {
   key: string;
 }
 
-export default function SongListItem({ song }: SongListItemProps) {
+export const SongListItem = ({ song }: SongListItemProps) => {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: song.album.picture }}></Image>
@@ -22,7 +22,7 @@ export default function SongListItem({ song }: SongListItemProps) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
