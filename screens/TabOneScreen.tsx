@@ -1,8 +1,9 @@
 import { useQuery, gql } from "@apollo/client";
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
+import SongListItem from "../components/SongListItem";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
@@ -28,18 +29,23 @@ export default function TabOneScreen({
     },
   });
 
-  console.log(loading);
-  console.log(data);
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      {/* <Text style={styles.title}>Tab One</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
+
+      {!loading && (
+        <ScrollView style={styles.listView}>
+          {data.songs.songs.map((song: any, i: number) => (
+            <SongListItem song={song} key={"song-" + i} />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -58,6 +64,10 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  listView: {
+    width: "100%",
+    padding: 10,
   },
 });
 
