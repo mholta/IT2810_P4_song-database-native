@@ -23,7 +23,7 @@ const linking: LinkingOptions<RootStackParamList> = {
           },
           TabTwo: {
             screens: {
-              TabTwoScreen: "two",
+              SubmitSongScreen: "Send inn en sang",
             },
           },
         },

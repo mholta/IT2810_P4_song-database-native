@@ -20,7 +20,7 @@ import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SongScreen from "../screens/SongScreen";
 import SongsScreen from "../screens/SongsScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
+import SubmitSong from "../screens/SubmitSong";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -111,10 +111,10 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={SubmitSong}
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Send inn en sang",
+          // tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
     </BottomTab.Navigator>

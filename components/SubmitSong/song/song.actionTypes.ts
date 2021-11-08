@@ -1,0 +1,14 @@
+export const SET_TITLE = 'SET_TITLE';
+export const SET_MAIN_ARTIST = 'SET_MAIN_ARTIST';
+export const SET_ARTISTS = 'SET_ARTISTS';
+export const SET_ALBUM_ID = 'SET_ALBUM';
+export const SET_THEMES = 'SET_THEMES';
+export const SET_CONTRIBUTORS_STRING = 'SET_CONTRIBUTORS_STRING';
+export const SET_PRODUCERS_STRING = 'SET_PRODUCERS_STRING';
+export const SET_WRITERS_STRING = 'SET_WRITERS_STRING';
+export const SET_KEY = 'SET_KEY';
+export const SET_TEMPO = 'SET_TEMPO';
+export const SET_TIME = 'SET_TIME';
+export const SET_SPOTIFY_LINK = 'SET_SPOTIFY_LINK';
+export const SET_APPLE_MUSIC_LINK = 'SET_APPLE_MUSIC_LINK';
+export const SET_RELEASE_DATE = 'SET_RELEASE_DATE';
