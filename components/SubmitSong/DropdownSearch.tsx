@@ -22,11 +22,18 @@ type ArtistOrAlbum = {
   releaseDate?: Date;
 };
 
+interface Variables {
+  name?: string;
+  title?: string;
+  offset?: number;
+  limit?: number;
+  artist?: string;
+}
 interface DropdownSearchProps {
   setValueCallback: (value: string) => void;
   setDateCallback?: (date: Date | null) => void;
   query: DocumentNode;
-  variables: { [key: string]: any };
+  variables: Variables;
   searchKey: SearchKey;
   label: string;
   dataKey: string;
@@ -56,26 +63,29 @@ const DropdownSearch = ({
   const [previousInputValue, setPreviousInputValue] = useState<string>(" ");
   const [modalVisible, setModalVisible] = useState(false);
   const [chosen, setChosen] = useState("");
-  const { loading, error, refetch } = useQuery(query, {
+  const [noMore, setNoMore] = useState(false);
+  const [elementCount, setElementCount] = useState<number>(0);
+  const { loading, error, refetch, fetchMore } = useQuery(query, {
     variables: variables,
   });
   useEffect(() => {
-    if (previousInputValue !== inputValue && inputValue !== "") {
+    if (previousInputValue !== inputValue) {
       (async () => {
         setPreviousInputValue(inputValue);
-        await refetch({ [searchKey]: inputValue }).then(({ data }) => {
+        const variables: Variables = { name: inputValue };
+        await refetch(variables).then(({ data }) => {
+          setElementCount(data[dataKey].length);
           setOptions(data[dataKey]);
+          setNoMore(data[dataKey].length < (variables.limit || 50));
         });
       })();
     }
     if (inputValue === "") {
       setPreviousInputValue("");
-      setOptions([]);
     }
   }, [loading, inputValue]);
 
   const Item = ({ text, _id }: ItemProp) => {
-    console.log(text, _id);
     return (
       <View style={styles.item}>
         <Button
@@ -90,13 +100,41 @@ const DropdownSearch = ({
       </View>
     );
   };
+  const loadMore = () => {
+    if (elementCount > 0 && !noMore) {
+      fetchMore({
+        variables: {
+          offset: elementCount,
+        },
+      })
+        .then((fetchMoreResult: any) => {
+          if (fetchMoreResult.data[dataKey]) {
+            setOptions([...options, ...fetchMoreResult.data[dataKey]]);
+            return fetchMoreResult.data[dataKey].length;
+          }
+          return 0;
+        })
+        .then((skip: number) => {
+          if (skip < (variables.limit || 50)) {
+            setNoMore(true);
+          } else {
+            setElementCount(elementCount + skip);
+          }
+        });
+    }
+  };
+  const openModal = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   const renderItem: ListRenderItem<ArtistOrAlbum> = ({ item, index }) => {
     return <Item text={item[searchKey]} _id={item._id} />;
   };
   const seperator = () => {
     return <View style={styles.seperator} />;
   };
-  console.log(options);
   return (
     <View>
       <Text>{label.replace(/^\w/, (match) => match.toUpperCase())}</Text>
@@ -110,44 +148,46 @@ const DropdownSearch = ({
               )}: ${chosen}`
         }
         style={{ width: "auto" }}
-        onPress={() => setModalVisible(true)}
+        onPress={openModal}
       />
 
-      <View style={styles.modal}>
-        <Modal
-          isVisible={modalVisible}
-          swipeDirection="down"
-          onBackdropPress={() => setModalVisible(false)}
-        >
-          <View style={styles.modal}>
-            <FlatList
-              ListHeaderComponent={
-                <SearchBar
-                  placeholder={`Søk etter ${labelPreposition} ${label}`}
-                  style={styles.input}
-                  autoCorrect={false}
-                  // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
-                  onChangeText={(newInputValue: string) => {
-                    setInputValue(newInputValue);
-                  }}
-                  round={false}
-                  // lightTheme={true}
-                  onFocus={() => setModalVisible(true)}
-                  onBlur={() => setModalVisible(true)}
-                  clearButtonMode={"always"}
-                  value={inputValue}
-                  //@ts-ignore probably same error as above. & is used insted of | https://github.com/react-native-elements/react-native-elements/issues/3089
-                  searchIcon={null}
-                />
-              }
-              data={options}
-              renderItem={renderItem}
-              ItemSeparatorComponent={seperator}
-            ></FlatList>
-            {options.length === 0 && inputValue !== "" && noOptionsComponent}
-          </View>
-        </Modal>
-      </View>
+      <Modal
+        isVisible={modalVisible}
+        swipeDirection="down"
+        onBackdropPress={closeModal}
+        // style={styles.modal}
+      >
+        <View style={styles.container}>
+          <FlatList
+            ListHeaderComponent={
+              <SearchBar
+                placeholder={`Søk etter ${labelPreposition} ${label}`}
+                style={styles.input}
+                autoCorrect={false}
+                // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
+                onChangeText={(newInputValue: string) => {
+                  setInputValue(newInputValue);
+                }}
+                round={false}
+                // lightTheme={true}
+                onFocus={openModal}
+                onBlur={openModal}
+                clearButtonMode={"always"}
+                value={inputValue}
+                //@ts-ignore probably same error as above. & is used insted of | https://github.com/react-native-elements/react-native-elements/issues/3089
+                searchIcon={null}
+              />
+            }
+            data={options}
+            keyExtractor={(_, index) => label + "-" + index}
+            renderItem={renderItem}
+            ItemSeparatorComponent={seperator}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.25}
+          ></FlatList>
+          {options.length === 0 && inputValue !== "" && noOptionsComponent}
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -164,11 +204,13 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "white",
   },
-  modal: {
+  container: {
+    flex: 1,
     top: 20,
-    width: "80%",
-    alignSelf: "center",
+    marginBottom: 20,
+    // width: "80%",
     position: "relative",
+    alignSelf: "center",
     // padding: "1px",
     borderRadius: 10,
     backgroundColor: "black",

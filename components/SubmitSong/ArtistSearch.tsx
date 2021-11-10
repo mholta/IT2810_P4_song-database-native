@@ -20,7 +20,7 @@ const ArtistSearch = ({ setValueCallback }: ArtistSearchProps) => {
       query={GET_ARTIST_QUERY}
       variables={{
         name: "",
-        limit: 4,
+        limit: 10,
       }}
       searchKey="name"
       setValueCallback={setValueCallback}
@@ -29,8 +29,8 @@ const ArtistSearch = ({ setValueCallback }: ArtistSearchProps) => {
 };
 
 export const GET_ARTIST_QUERY = gql`
-  query GetArtists($name: String, $limit: Int!) {
-    artists(name: $name, limit: $limit) {
+  query GetArtists($name: String, $limit: Int!, $offset: Int) {
+    artists(name: $name, limit: $limit, offset: $offset) {
       _id
       name
     }

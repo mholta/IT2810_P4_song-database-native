@@ -27,7 +27,7 @@ const AlbumSearch = ({
       variables={{
         artist: artistId,
         title: "",
-        limit: 4,
+        limit: 10,
       }}
       searchKey="title"
       setValueCallback={setValueCallback}
@@ -48,8 +48,13 @@ const AlbumSearch = ({
   );
 };
 export const GET_ALBUM_QUERY = gql`
-  query GetAlbums($artist: String!, $title: String, $limit: Int!) {
-    albums(artist: $artist, title: $title, limit: $limit) {
+  query GetAlbums(
+    $artist: String!
+    $title: String
+    $limit: Int!
+    $offset: Int
+  ) {
+    albums(artist: $artist, title: $title, limit: $limit, offset: $offset) {
       _id
       title
       releaseDate
