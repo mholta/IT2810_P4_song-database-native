@@ -62,13 +62,14 @@ export const SongList = ({ navigation }: SongListProps) => {
         variables: {
           page: loadedPageNum + 1,
         },
-      })
-        .then((fetchMoreResult: any) => {
-          if (fetchMoreResult.data?.songs?.songs) {
-            setSongs([...songs, ...fetchMoreResult.data.songs.songs]);
-          }
-        })
-        .then(() => setLoadedPageNum(loadedPageNum + 1));
+      });
+      setLoadedPageNum(loadedPageNum + 1);
+      // .then((fetchMoreResult: any) => {
+      //   if (fetchMoreResult.data?.songs?.songs) {
+      //     setSongs([...songs, ...fetchMoreResult.data.songs.songs]);
+      //   }
+      // })
+      // .then(() => setLoadedPageNum(loadedPageNum + 1));
     }
   };
 

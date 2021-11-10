@@ -16,7 +16,26 @@ import { theme } from "./styles/theme";
 
 const client = new ApolloClient({
   link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4000/graphql" }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          songs: {
+            keyArgs: false,
+            merge(existing, incoming) {
+              console.log(existing, incoming);
+              if (!incoming) return existing;
+              if (!existing) return incoming;
+              const { songs, ...res } = incoming;
+              let result = res;
+              result.songs = [...existing.songs, ...songs];
+              return { ...result };
+            },
+          },
+        },
+      },
+    },
+  }),
   headers: {
     mode: "no-cors",
   },
