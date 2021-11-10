@@ -1,5 +1,12 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import { FlatList, StyleSheet, Text, ScrollView, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  Platform,
+} from "react-native";
 import EditScreenInfo from "../components/EditScreenInfo";
 import {
   initialSongState,
@@ -16,6 +23,7 @@ import {
   setReleaseDate,
 } from "../components/SubmitSong/song/song.actions";
 import AlbumSearch from "../components/SubmitSong/AlbumSearch";
+import DatePicker from "../components/SubmitSong/DatePicker";
 
 export default function SubmitSong() {
   const [state, dispatch] = useReducer(songReducer, initialSongState);
@@ -29,8 +37,10 @@ export default function SubmitSong() {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
-    useState<boolean>(false);
+  const [
+    createNewAlbumModalOpen,
+    setCreateNewAlbumModalOpen,
+  ] = useState<boolean>(false);
   // const client = useApolloClient();
   useEffect(() => {
     setArtistId(state.mainArtistId);
@@ -54,6 +64,7 @@ export default function SubmitSong() {
           }}
         />
       )}
+      <DatePicker state={state} dispatch={dispatch} />
       <View
         style={styles.separator}
         // lightColor="#eee"
