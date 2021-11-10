@@ -5,14 +5,14 @@ import { SongList } from "../components/SongList";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
-const SongsScreen = ({}: RootTabScreenProps<"SongsTab">) => {
+const SongsScreen = ({ navigation }: RootTabScreenProps<"SongsTab">) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
       <SearchFilterWrapper />
       <View style={styles.resultsWrapper}>
-        <SongList />
+        <SongList navigation={navigation} />
       </View>
     </View>
   );

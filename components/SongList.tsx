@@ -1,15 +1,19 @@
 import { useQuery, gql } from "@apollo/client";
 import * as React from "react";
 import { useEffect } from "react";
-import { FlatList, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Song } from "../api/types";
 import { SongListItem } from "../components/SongListItem";
 import { View } from "../components/Themed";
 import { RootState } from "../redux";
 import { SortOptions } from "../redux/filter/filter.types";
 
-export const SongList = () => {
+interface SongListProps {
+  navigation: any;
+}
+
+export const SongList = ({ navigation }: SongListProps) => {
   const searchString = useSelector(
     (rootState: RootState) => rootState.filter.searchString
   );
@@ -69,7 +73,11 @@ export const SongList = () => {
   };
 
   const renderItem = ({ item }: { item: any }) => (
-    <SongListItem song={item} key={item._id} />
+    <TouchableOpacity
+      onPress={() => navigation.navigate("SongScreen", { songId: item._id })}
+    >
+      <SongListItem song={item} key={item._id} />
+    </TouchableOpacity>
   );
 
   return (

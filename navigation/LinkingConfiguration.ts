@@ -18,6 +18,7 @@ const linking: LinkingOptions<RootStackParamList> = {
           SongsTab: {
             screens: {
               SongsScreen: "one",
+              SongScreen: "song",
             },
           },
           TabTwo: {

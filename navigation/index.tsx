@@ -18,6 +18,7 @@ import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import SongScreen from "../screens/SongScreen";
 import SongsScreen from "../screens/SongsScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
@@ -27,7 +28,7 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
-const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
+function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -36,7 +37,7 @@ const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
       <RootNavigator />
     </NavigationContainer>
   );
-};
+}
 
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
@@ -51,6 +52,11 @@ function RootNavigator() {
         name="Root"
         component={BottomTabNavigator}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SongScreen"
+        component={SongScreen}
+        options={{ title: "Sang" }}
       />
       <Stack.Screen
         name="NotFound"
