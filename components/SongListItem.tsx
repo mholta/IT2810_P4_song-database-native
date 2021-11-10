@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors?.box,
     marginBottom: 10,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: theme.layout?.borderRadius?.default,
     flex: 1,
     flexDirection: "row",
   },

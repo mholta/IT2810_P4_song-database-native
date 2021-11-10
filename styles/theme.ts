@@ -1,14 +1,27 @@
 import { Theme } from "react-native-elements";
 
+type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
+
 declare module "react-native-elements" {
+  export interface Layout {
+    borderRadius: { default: number; large: number; small: number };
+  }
   export interface Colors {
     box: string;
     text: string;
+  }
+
+  export interface FullTheme {
+    colors: RecursivePartial<Colors>;
+    layout: Partial<Layout>;
   }
 }
 
 const mainTheme: Theme = {
   colors: { primary: "#ffbf00", box: "black", text: "black" },
+  layout: {
+    borderRadius: { default: 10, large: 15, small: 5 },
+  },
 };
 
 const lightThemeColors: Theme = {

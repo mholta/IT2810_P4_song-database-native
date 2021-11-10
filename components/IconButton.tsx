@@ -25,9 +25,11 @@ export const IconButton = ({ href, icon, text }: IconButtonProps) => {
 const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
+    alignItems: "center",
   },
   text: {
     marginLeft: 10,
+    marginBottom: 20,
     textDecorationLine: "underline",
     fontSize: 18,
   },

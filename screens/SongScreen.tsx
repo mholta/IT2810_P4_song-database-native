@@ -3,6 +3,7 @@ import { faApple, faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as React from "react";
 import { Image, ScrollView, StyleSheet } from "react-native";
+import { makeStyles, useTheme } from "react-native-elements";
 import { IconButton } from "../components/IconButton";
 import { Text, View } from "../components/Themed";
 
@@ -15,6 +16,9 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
   const { data, loading, error } = useQuery(GET_SONG_DATA, {
     variables: { id: route.params.songId },
   });
+
+  const styles = useStyles();
+  const { theme } = useTheme();
 
   return (
     <View style={styles.container}>
@@ -51,7 +55,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
                 <Text>{data.song.producers.join(", ")}</Text>
               </View>
             )}
-            <View style={styles.infoFields}>
+            <View style={[styles.infoBox, styles.infoFields]}>
               {data.song.key && (
                 <View style={styles.infoField}>
                   <Text style={styles.infoBoxTitle}>Toneart: </Text>
@@ -79,7 +83,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
                   icon={
                     <FontAwesomeIcon
                       icon={faSpotify}
-                      color={"white"}
+                      color={theme.colors?.text}
                       size={32}
                     />
                   }
@@ -94,7 +98,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
                     icon={
                       <FontAwesomeIcon
                         icon={faApple}
-                        color={"white"}
+                        color={theme.colors?.text}
                         size={32}
                       />
                     }
@@ -110,7 +114,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     alignItems: "center",
@@ -122,8 +126,8 @@ const styles = StyleSheet.create({
   },
   songInformation: {
     width: "100%",
-    backgroundColor: "#090909",
-    borderRadius: 10,
+    backgroundColor: "transparent",
+    borderRadius: theme.layout?.borderRadius?.default,
     padding: 20,
   },
   picture: {
@@ -137,8 +141,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   infoBox: {
-    backgroundColor: "#111111",
-    borderRadius: 5,
+    backgroundColor: theme.colors?.box,
+    borderRadius: theme.layout?.borderRadius?.small,
     padding: 7,
     marginTop: 7,
   },
@@ -147,28 +151,23 @@ const styles = StyleSheet.create({
   },
   infoField: {
     flexDirection: "row",
-    backgroundColor: "#111111",
-    borderRadius: 15,
+    backgroundColor: "transparent",
     padding: 7,
     paddingLeft: 10,
     paddingRight: 10,
-    marginTop: 7,
   },
   infoFields: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "#090909",
   },
   iconButtons: {
-    backgroundColor: "#090909",
     marginTop: 20,
     alignSelf: "center",
   },
   buttonMargin: {
-    backgroundColor: "#090909",
-    marginTop: 10,
+    marginBottom: 40,
   },
-});
+}));
 
 export const GET_SONG_DATA = gql`
   query GetSong($id: String!) {
