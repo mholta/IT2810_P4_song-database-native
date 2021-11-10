@@ -33,16 +33,11 @@ const AlbumSearch = ({
       setValueCallback={setValueCallback}
       setDateCallback={setDateCallback}
       noOptionsComponent={
-        <View>
-          <Text style={{ color: "white", padding: 12 }}>
-            Fant ingen album som matcher
-          </Text>
-          <Button
-            onPress={() => setNewAlbumModalOpenCallback(true)}
-            type="solid"
-            title="Opprett nytt album"
-          ></Button>
-        </View>
+        <Button
+          onPress={() => setNewAlbumModalOpenCallback(true)}
+          type="solid"
+          title="Opprett nytt album"
+        ></Button>
       }
     />
   );

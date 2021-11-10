@@ -42,10 +42,6 @@ interface DropdownSearchProps {
   labelPreposition: string;
   noOptionsComponent?: React.ReactNode;
 }
-interface ItemProp {
-  _id: string;
-  text: string;
-}
 
 const DropdownSearch = ({
   setValueCallback,
@@ -72,7 +68,7 @@ const DropdownSearch = ({
     if (previousInputValue !== inputValue) {
       (async () => {
         setPreviousInputValue(inputValue);
-        const variables: Variables = { name: inputValue };
+        const variables: Variables = { [searchKey]: inputValue };
         await refetch(variables).then(({ data }) => {
           setElementCount(data[dataKey].length);
           setOptions(data[dataKey]);
@@ -85,21 +81,6 @@ const DropdownSearch = ({
     }
   }, [loading, inputValue]);
 
-  const Item = ({ text, _id }: ItemProp) => {
-    return (
-      <View style={styles.item}>
-        <Button
-          type="clear"
-          onPress={() => {
-            setModalVisible(false);
-            setValueCallback(_id);
-            setChosen(text);
-          }}
-          title={text}
-        />
-      </View>
-    );
-  };
   const loadMore = () => {
     if (elementCount > 0 && !noMore) {
       fetchMore({
@@ -130,7 +111,22 @@ const DropdownSearch = ({
     setModalVisible(false);
   };
   const renderItem: ListRenderItem<ArtistOrAlbum> = ({ item, index }) => {
-    return <Item text={item[searchKey]} _id={item._id} />;
+    return (
+      <View style={styles.item}>
+        <Button
+          type="clear"
+          onPress={() => {
+            setModalVisible(false);
+            setValueCallback(item._id);
+            if (setDateCallback && item.releaseDate) {
+              setDateCallback(item.releaseDate);
+            }
+            setChosen(item[searchKey]);
+          }}
+          title={item[searchKey]}
+        />
+      </View>
+    );
   };
   const seperator = () => {
     return <View style={styles.seperator} />;
@@ -185,7 +181,7 @@ const DropdownSearch = ({
             onEndReached={loadMore}
             onEndReachedThreshold={0.25}
           ></FlatList>
-          {options.length === 0 && inputValue !== "" && noOptionsComponent}
+          {noOptionsComponent}
         </View>
       </Modal>
     </View>
