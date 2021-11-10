@@ -54,14 +54,12 @@ const DropdownSearch = ({
   labelPreposition,
   noOptionsComponent,
 }: DropdownSearchProps) => {
-  const [options, setOptions] = useState<readonly ArtistOrAlbum[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [previousInputValue, setPreviousInputValue] = useState<string>(" ");
   const [modalVisible, setModalVisible] = useState(false);
   const [chosen, setChosen] = useState("");
-  const [noMore, setNoMore] = useState(false);
-  const [elementCount, setElementCount] = useState<number>(0);
-  const { loading, error, refetch, fetchMore } = useQuery(query, {
+  const [previousDataLength, setPreviousDataLength] = useState<number>(0);
+  const { data, loading, error, refetch, fetchMore } = useQuery(query, {
     variables: variables,
   });
   useEffect(() => {
@@ -69,11 +67,7 @@ const DropdownSearch = ({
       (async () => {
         setPreviousInputValue(inputValue);
         const variables: Variables = { [searchKey]: inputValue };
-        await refetch(variables).then(({ data }) => {
-          setElementCount(data[dataKey].length);
-          setOptions(data[dataKey]);
-          setNoMore(data[dataKey].length < (variables.limit || 50));
-        });
+        refetch(variables);
       })();
     }
     if (inputValue === "") {
@@ -82,26 +76,31 @@ const DropdownSearch = ({
   }, [loading, inputValue]);
 
   const loadMore = () => {
-    if (elementCount > 0 && !noMore) {
+    if (
+      data &&
+      data[dataKey].length > 0 &&
+      previousDataLength + (variables.limit || 50) == data[dataKey].length
+    ) {
+      setPreviousDataLength(data[dataKey].length);
       fetchMore({
         variables: {
-          offset: elementCount,
+          offset: data[dataKey].length,
         },
-      })
-        .then((fetchMoreResult: any) => {
-          if (fetchMoreResult.data[dataKey]) {
-            setOptions([...options, ...fetchMoreResult.data[dataKey]]);
-            return fetchMoreResult.data[dataKey].length;
-          }
-          return 0;
-        })
-        .then((skip: number) => {
-          if (skip < (variables.limit || 50)) {
-            setNoMore(true);
-          } else {
-            setElementCount(elementCount + skip);
-          }
-        });
+      });
+      // .then((fetchMoreResult: any) => {
+      //   if (fetchMoreResult.data[dataKey]) {
+      //     setOptions([...options, ...fetchMoreResult.data[dataKey]]);
+      //     return fetchMoreResult.data[dataKey].length;
+      //   }
+      //   return 0;
+      // })
+      // .then((skip: number) => {
+      //   if (skip < (variables.limit || 50)) {
+      //     setNoMore(true);
+      //   } else {
+      //     setElementCount(elementCount + skip);
+      //   }
+      // });
     }
   };
   const openModal = () => {
@@ -174,7 +173,7 @@ const DropdownSearch = ({
                 searchIcon={null}
               />
             }
-            data={options}
+            data={data ? data[dataKey] : []}
             keyExtractor={(_, index) => label + "-" + index}
             renderItem={renderItem}
             ItemSeparatorComponent={seperator}

@@ -15,7 +15,7 @@ import { ThemeProvider } from "react-native-elements";
 import { theme } from "./styles/theme";
 
 const client = new ApolloClient({
-  link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4000/graphql" }),
+  link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4001/graphql" }),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
@@ -30,6 +30,24 @@ const client = new ApolloClient({
               let result = res;
               result.songs = [...existing.songs, ...songs];
               return { ...result };
+            },
+          },
+          artists: {
+            keyArgs: false,
+            merge(existing, incoming) {
+              console.log(existing, incoming);
+              if (!incoming) return existing;
+              if (!existing) return incoming;
+              return [...existing, ...incoming];
+            },
+          },
+          albums: {
+            keyArgs: false,
+            merge(existing, incoming) {
+              console.log(existing, incoming);
+              if (!incoming) return existing;
+              if (!existing) return incoming;
+              return [...existing, ...incoming];
             },
           },
         },
