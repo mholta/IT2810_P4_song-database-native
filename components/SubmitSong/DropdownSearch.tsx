@@ -8,9 +8,9 @@ import {
   View,
   StyleSheet,
   ListRenderItem,
-  Modal,
   TouchableWithoutFeedback,
 } from "react-native";
+import Modal from "react-native-modal";
 import { SearchBar, Button } from "react-native-elements";
 
 type SearchKey = "name" | "title";
@@ -113,62 +113,48 @@ const DropdownSearch = ({
         onPress={() => setModalVisible(true)}
       />
 
-      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-        <View style={styles.modal}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-              {/* <View
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              width: "100vw",
-              height: "100vh",
-            }}
-          > */}
-              <View style={styles.modal}>
-                <FlatList
-                  ListHeaderComponent={
-                    <SearchBar
-                      placeholder={`Søk etter ${labelPreposition} ${label}`}
-                      style={styles.input}
-                      autoCorrect={false}
-                      // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
-                      onChangeText={(newInputValue: string) => {
-                        setInputValue(newInputValue);
-                      }}
-                      round={false}
-                      // lightTheme={true}
-                      onFocus={() => setModalVisible(true)}
-                      onBlur={() => setModalVisible(true)}
-                      clearButtonMode={"always"}
-                      value={inputValue}
-                      //@ts-ignore probably same error as above. & is used insted of | https://github.com/react-native-elements/react-native-elements/issues/3089
-                      searchIcon={null}
-                    />
-                  }
-                  data={options}
-                  renderItem={renderItem}
-                  ItemSeparatorComponent={seperator}
-                ></FlatList>
-                {options.length === 0 &&
-                  inputValue !== "" &&
-                  noOptionsComponent}
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={styles.modal}>
+        <Modal
+          isVisible={modalVisible}
+          swipeDirection="down"
+          onBackdropPress={() => setModalVisible(false)}
+        >
+          <View style={styles.modal}>
+            <FlatList
+              ListHeaderComponent={
+                <SearchBar
+                  placeholder={`Søk etter ${labelPreposition} ${label}`}
+                  style={styles.input}
+                  autoCorrect={false}
+                  // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
+                  onChangeText={(newInputValue: string) => {
+                    setInputValue(newInputValue);
+                  }}
+                  round={false}
+                  // lightTheme={true}
+                  onFocus={() => setModalVisible(true)}
+                  onBlur={() => setModalVisible(true)}
+                  clearButtonMode={"always"}
+                  value={inputValue}
+                  //@ts-ignore probably same error as above. & is used insted of | https://github.com/react-native-elements/react-native-elements/issues/3089
+                  searchIcon={null}
+                />
+              }
+              data={options}
+              renderItem={renderItem}
+              ItemSeparatorComponent={seperator}
+            ></FlatList>
+            {options.length === 0 && inputValue !== "" && noOptionsComponent}
+          </View>
+        </Modal>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    height: "2rem",
+    height: 20,
     padding: 12,
   },
   item: {
@@ -179,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   modal: {
-    top: "10vh",
+    top: 20,
     width: "80%",
     alignSelf: "center",
     position: "relative",

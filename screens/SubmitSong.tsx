@@ -29,10 +29,8 @@ export default function SubmitSong() {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [
-    createNewAlbumModalOpen,
-    setCreateNewAlbumModalOpen,
-  ] = useState<boolean>(false);
+  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
+    useState<boolean>(false);
   // const client = useApolloClient();
   useEffect(() => {
     setArtistId(state.mainArtistId);
