@@ -23,7 +23,7 @@ const SearchInput = () => {
       sortOrder: SortOrder.DESC,
       sortType: localSearchString ? SortType.RELEVANCE : SortType.RELEASE_DATE,
     };
-    //dispatch(setSortOptions(newSortOption));
+    dispatch(setSortOptions(newSortOption));
   };
 
   useEffect(() => {
