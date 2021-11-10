@@ -6,6 +6,10 @@ import { createUploadLink } from "apollo-upload-client";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
+import { Provider as StoreProvider } from "react-redux";
+import store from "./redux/store";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
 
 const client = new ApolloClient({
   link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4000/graphql" }),
@@ -15,6 +19,8 @@ const client = new ApolloClient({
   },
 });
 
+library.add(faSlidersH);
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -23,12 +29,15 @@ export default function App() {
     return null;
   } else {
     return (
-      <ApolloProvider client={client}>
         <SafeAreaProvider>
+      <ApolloProvider client={client}>
+        <StoreProvider store={store}>
           <Navigation colorScheme={colorScheme} />
           <StatusBar />
-        </SafeAreaProvider>
+        </StoreProvider>
       </ApolloProvider>
+        </SafeAreaProvider>
+      
     );
   }
 }
