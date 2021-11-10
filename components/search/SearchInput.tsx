@@ -13,8 +13,9 @@ const SearchInput = () => {
   );
   const dispatch = useDispatch();
 
-  const [localSearchString, setLocalSearchString] =
-    useState<string>(searchString);
+  const [localSearchString, setLocalSearchString] = useState<string>(
+    searchString
+  );
 
   const triggerSearch = () => {
     dispatch(setSearchString(localSearchString));
@@ -36,6 +37,7 @@ const SearchInput = () => {
   return (
     <SearchBar
       placeholder="Søk på sang"
+      // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
       onChangeText={(newVal) => setLocalSearchString(newVal)}
       value={localSearchString}
       style={styles.textInput}

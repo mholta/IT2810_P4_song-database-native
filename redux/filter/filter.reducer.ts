@@ -19,9 +19,13 @@ export interface FilterState {
   searchString: string;
 }
 
-const dummyThemes: FilterCategory[] = ["hei", "sann", "du", "er", "bra"].map(
-  (e) => ({ _id: e, title: e })
-);
+const dummyThemes: FilterCategory[] = [
+  "hei",
+  "sann",
+  "du",
+  "er",
+  "bra",
+].map((e) => ({ _id: e, title: e }));
 
 const initialFilterState: FilterState = {
   allThemes: [...dummyThemes],
