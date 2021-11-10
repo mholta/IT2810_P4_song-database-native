@@ -2,6 +2,7 @@ import React from "react";
 import { gql } from "@apollo/client";
 import { Button } from "react-native-elements";
 import DropdownSearch from "./DropdownSearch";
+import { Text, View } from "react-native";
 interface AlbumSearch {
   setValueCallback: (value: string) => void;
   setDateCallback: (date: Date | null) => void;
@@ -32,15 +33,16 @@ const AlbumSearch = ({
       setValueCallback={setValueCallback}
       setDateCallback={setDateCallback}
       noOptionsComponent={
-        <div>
-          Ingen resultat.
+        <View>
+          <Text style={{ color: "white", padding: 12 }}>
+            Fant ingen album som matcher
+          </Text>
           <Button
             onPress={() => setNewAlbumModalOpenCallback(true)}
             type="solid"
-          >
-            Opprett nytt album
-          </Button>
-        </div>
+            title="Opprett nytt album"
+          ></Button>
+        </View>
       }
     />
   );

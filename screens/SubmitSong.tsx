@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, ScrollView, View } from "react-native";
 import EditScreenInfo from "../components/EditScreenInfo";
 import {
@@ -28,19 +28,21 @@ export default function SubmitSong() {
   const [dateError, setDateError] = useState(false);
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
+  const [artistId, setArtistId] = useState("");
   const [
     createNewAlbumModalOpen,
     setCreateNewAlbumModalOpen,
   ] = useState<boolean>(false);
   // const client = useApolloClient();
-
+  useEffect(() => {
+    setArtistId(state.mainArtistId);
+  }, [state.mainArtistId]);
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Send innjhg 2 en sang</Text>
       <ArtistSearch
         setValueCallback={(value: string) => dispatch(setMainArtist(value))}
       />
-      {state.mainArtistId !== "" && (
+      {state.mainArtistId !== "" && state.mainArtistId === artistId && (
         <AlbumSearch
           artistId={state.mainArtistId}
           setValueCallback={(value: string) => {

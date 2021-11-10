@@ -99,19 +99,20 @@ const DropdownSearch = ({
   console.log(options);
   return (
     <View>
+      <Text>{label.replace(/^\w/, (match) => match.toUpperCase())}</Text>
       <Button
         type="outline"
         title={
-          chosen === "" ? `Velg ${labelPreposition} ${label}` : `Bytt ${label}`
+          chosen === ""
+            ? `Velg ${labelPreposition} ${label}`
+            : `${label.replace(/^\w/, (match) =>
+                match.toUpperCase()
+              )}: ${chosen}`
         }
         style={{ width: "auto" }}
         onPress={() => setModalVisible(true)}
       />
-      {chosen !== "" && (
-        <Text>
-          Valgt {label}: {chosen}
-        </Text>
-      )}
+
       <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
         <View style={styles.modal}>
           <Modal
@@ -153,6 +154,9 @@ const DropdownSearch = ({
                   renderItem={renderItem}
                   ItemSeparatorComponent={seperator}
                 ></FlatList>
+                {options.length === 0 &&
+                  inputValue !== "" &&
+                  noOptionsComponent}
               </View>
             </TouchableWithoutFeedback>
           </Modal>
