@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StyleSheet } from "react-native";
+import { makeStyles } from "react-native-elements";
 import { Song } from "../api/types";
 import { Text, View } from "./Themed";
 
@@ -9,6 +10,7 @@ interface SongListItemProps {
 }
 
 export const SongListItem = ({ song }: SongListItemProps) => {
+  const styles = useStyles();
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: song.album.picture }}></Image>
@@ -24,9 +26,9 @@ export const SongListItem = ({ song }: SongListItemProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
-    backgroundColor: "#090909",
+    backgroundColor: theme.colors?.box,
     marginBottom: 10,
     padding: 10,
     borderRadius: 10,
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     marginLeft: 10,
-    backgroundColor: "#090909",
+    backgroundColor: "transparent",
   },
   image: {
     height: 60,
@@ -50,4 +52,4 @@ const styles = StyleSheet.create({
   artists: {
     fontSize: 14,
   },
-});
+}));

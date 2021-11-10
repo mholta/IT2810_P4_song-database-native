@@ -11,6 +11,8 @@ import store from "./redux/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
 import StaticContent from "./hooks/StaticContent";
+import { ThemeProvider } from "react-native-elements";
+import { theme } from "./styles/theme";
 
 const client = new ApolloClient({
   link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4000/graphql" }),
@@ -33,9 +35,13 @@ export default function App() {
       <SafeAreaProvider>
         <ApolloProvider client={client}>
           <StoreProvider store={store}>
-            <StaticContent />
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
+            <ThemeProvider
+              theme={colorScheme === "dark" ? theme.dark : theme.light}
+            >
+              <StaticContent />
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </ThemeProvider>
           </StoreProvider>
         </ApolloProvider>
       </SafeAreaProvider>

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { Button } from "react-native-elements";
+import { Button, makeStyles } from "react-native-elements";
 import ReactNativeModal from "react-native-modal";
 import { useSelector } from "react-redux";
 import useColorScheme from "../../hooks/useColorScheme";
@@ -25,18 +25,22 @@ const SearchOptions = () => {
 
   const colorScheme = useColorScheme();
 
+  const styles = useStyles();
+
   return (
     <View style={styles.container}>
-      <View>
-        <TouchableOpacity onPress={openModal} style={styles.button}>
-          <FontAwesomeIcon
-            icon="sliders-h"
-            size={20}
-            color={colorScheme === "dark" ? "#ddd" : "#111"}
-          />
-        </TouchableOpacity>
-      </View>
-      <ReactNativeModal isVisible={modalIsOpen} onBackdropPress={closeModal}>
+      <TouchableOpacity onPress={openModal} style={styles.button}>
+        <FontAwesomeIcon
+          icon="sliders-h"
+          size={20}
+          color={colorScheme === "dark" ? "#ddd" : "#111"}
+        />
+      </TouchableOpacity>
+      <ReactNativeModal
+        isVisible={modalIsOpen}
+        onBackdropPress={closeModal}
+        useNativeDriverForBackdrop
+      >
         <ScrollView>
           <Button title="Lukk" onPress={closeModal} />
           <SortSelect />
@@ -54,7 +58,7 @@ const SearchOptions = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   centeredView: {
     justifyContent: "center",
     alignItems: "center",
@@ -66,12 +70,15 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 22,
+    backgroundColor: "transparent",
+    marginRight: 6,
   },
   container: {
     display: "flex",
     flexDirection: "row",
+    backgroundColor: "transparent",
   },
-});
+}));
 
 export default SearchOptions;

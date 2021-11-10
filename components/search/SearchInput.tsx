@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
-import { SearchBar } from "react-native-elements";
+import { makeStyles, SearchBar, useTheme } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
@@ -23,7 +22,7 @@ const SearchInput = () => {
       sortOrder: SortOrder.DESC,
       sortType: localSearchString ? SortType.RELEVANCE : SortType.RELEASE_DATE,
     };
-    dispatch(setSortOptions(newSortOption));
+    //dispatch(setSortOptions(newSortOption));
   };
 
   useEffect(() => {
@@ -31,22 +30,35 @@ const SearchInput = () => {
     return () => clearTimeout(timeoutId);
   }, [localSearchString]);
 
+  const styles = useStyles();
+  const { theme } = useTheme();
+
   return (
     <SearchBar
-      style={styles.textInput}
-      containerStyle={styles.container}
       placeholder="Søk på sang"
       onChangeText={(newVal) => setLocalSearchString(newVal)}
       value={localSearchString}
+      style={styles.textInput}
+      containerStyle={styles.container}
+      inputContainerStyle={styles.inputContainer}
+      inputStyle={styles.input}
+      placeholderTextColor={theme.colors?.grey4}
     />
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
+    backgroundColor: "transparent",
+    borderBottomColor: "transparent",
+    borderTopColor: "transparent",
   },
+  inputContainer: {
+    backgroundColor: theme.colors?.grey2,
+  },
+  input: {},
   textInput: {},
-});
+}));
 
 export default SearchInput;
