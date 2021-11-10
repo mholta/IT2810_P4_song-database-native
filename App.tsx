@@ -10,6 +10,7 @@ import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
+import StaticContent from "./hooks/StaticContent";
 
 const client = new ApolloClient({
   link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4000/graphql" }),
@@ -29,15 +30,15 @@ export default function App() {
     return null;
   } else {
     return (
-        <SafeAreaProvider>
-      <ApolloProvider client={client}>
-        <StoreProvider store={store}>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </StoreProvider>
-      </ApolloProvider>
-        </SafeAreaProvider>
-      
+      <SafeAreaProvider>
+        <ApolloProvider client={client}>
+          <StoreProvider store={store}>
+            <StaticContent />
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </StoreProvider>
+        </ApolloProvider>
+      </SafeAreaProvider>
     );
   }
 }

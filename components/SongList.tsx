@@ -1,18 +1,31 @@
 import { useQuery, gql } from "@apollo/client";
 import * as React from "react";
+import { useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 import { Song } from "../api/types";
 import { SongListItem } from "../components/SongListItem";
 import { View } from "../components/Themed";
+import { RootState } from "../redux";
+import { SortOptions } from "../redux/filter/filter.types";
 
 export const SongList = () => {
+  const searchString = useSelector(
+    (rootState: RootState) => rootState.filter.searchString
+  );
+  const selectedThemes: string[] = useSelector(
+    (rootState: RootState) => rootState.filter.selectedThemes
+  ).map((e) => e._id);
+  const sortOptions: SortOptions = useSelector(
+    (rootState: RootState) => rootState.filter.sortOptions
+  );
+
   const options = {
     variables: {
-      searchString: "",
-      themes: undefined,
+      searchString: searchString,
+      themes: selectedThemes,
       contributor: undefined,
-      sortOrder: "asc",
-      sortType: "releaseDate",
+      ...sortOptions,
     },
   };
 
@@ -30,12 +43,12 @@ export const SongList = () => {
   const [lastPageNum, setLastPageNum] = React.useState<number>(1);
 
   // Set initial songs fetched
-  React.useEffect(() => {
+  useEffect(() => {
     if (data?.songs?.songs) setSongs(data.songs.songs);
   }, [data]);
 
   // Set total amount of pages count
-  React.useEffect(() => {
+  useEffect(() => {
     data?.songs?.pages && setLastPageNum(data?.songs?.pages);
   }, [data?.songs?.pages]);
 

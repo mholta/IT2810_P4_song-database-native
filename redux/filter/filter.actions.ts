@@ -1,11 +1,13 @@
+import { SortType } from "./../../components/search/SortSelect";
 import { SortOptions } from "./filter.types";
 import { FilterCategory } from "./filter.reducer";
 import {
   SET_ALL_THEMES,
+  SET_SEARCH_STRING,
   SET_SORT_OPTIONS,
   TOGGLE_THEME_SELECTION,
 } from "./filter.actionTypes";
-import store from "../store";
+import { SortOrder } from "../../components/search/SortSelect";
 
 export const setAllThemes = (themes: FilterCategory[]) => ({
   type: SET_ALL_THEMES,
@@ -15,20 +17,10 @@ export const setAllThemes = (themes: FilterCategory[]) => ({
 });
 
 export const toggleThemeSelection = (theme: FilterCategory) => {
-  const state = store.getState();
-  const newSelectedThemes: FilterCategory[] = [...state.filter.selectedThemes];
-
-  const indexInSelectedThemesList = newSelectedThemes
-    .map((e) => e._id)
-    .indexOf(theme._id);
-
-  if (indexInSelectedThemesList === -1) newSelectedThemes.push(theme);
-  else newSelectedThemes.splice(indexInSelectedThemesList, 1);
-
   return {
     type: TOGGLE_THEME_SELECTION,
     payload: {
-      selectedThemes: newSelectedThemes,
+      theme: theme,
     },
   };
 };
@@ -37,5 +29,12 @@ export const setSortOptions = (sortOptions: SortOptions) => ({
   type: SET_SORT_OPTIONS,
   payload: {
     sortOptions,
+  },
+});
+
+export const setSearchString = (searchString: string) => ({
+  type: SET_SEARCH_STRING,
+  payload: {
+    searchString,
   },
 });

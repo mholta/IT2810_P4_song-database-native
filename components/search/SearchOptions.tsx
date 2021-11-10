@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Button } from "react-native-elements";
 import ReactNativeModal from "react-native-modal";
 import { useSelector } from "react-redux";
 import useColorScheme from "../../hooks/useColorScheme";
@@ -11,7 +12,7 @@ import Categories from "./Categories";
 import SortSelect from "./SortSelect";
 
 const SearchOptions = () => {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
@@ -36,16 +37,18 @@ const SearchOptions = () => {
         </TouchableOpacity>
       </View>
       <ReactNativeModal isVisible={modalIsOpen} onBackdropPress={closeModal}>
-        <View style={styles.centeredView}>
-          <ScrollView>
+        <ScrollView>
+          <Button title="Lukk" onPress={closeModal} />
+          <SortSelect />
+          <View style={styles.centeredView}>
             <Categories
               title="Tema"
               allCategories={allThemes}
               selectedCategories={selectedThemes}
               toggleActiveCategoryFunction={toggleThemeSelection}
             />
-          </ScrollView>
-        </View>
+          </View>
+        </ScrollView>
       </ReactNativeModal>
     </View>
   );

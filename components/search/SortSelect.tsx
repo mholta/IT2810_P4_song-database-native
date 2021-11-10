@@ -1,42 +1,45 @@
-import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { FilterCategory } from "../../api/types";
 import { RootState } from "../../redux";
-import { setSortOptions } from "../../redux/filter/filter.actions";
+import {
+  setSortOptions,
+  toggleThemeSelection,
+} from "../../redux/filter/filter.actions";
 import { SortOptions } from "../../redux/filter/filter.types";
 import { Text, View } from "../Themed";
+import SortSelectButton from "./SortSelectButton";
 
 const SortSelect = () => {
   const sortOptionsRedux: SortOptions = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
   const dispatch = useDispatch();
-  const selectedSortOption = sortOptionObjectToString(sortOptionsRedux);
+
+  const showRelevanceSortOption: boolean = useSelector(
+    (rootState: RootState) => rootState.filter.searchString
+  )
+    ? true
+    : false;
+
+  const options: SortOption[] = showRelevanceSortOption
+    ? [relevanceSortOption, ...sortOptions]
+    : [...sortOptions];
 
   return (
     <View>
-      <Text>
-        <Picker
-          selectedValue={selectedSortOption}
-          onValueChange={(itemValue, itemIndex) =>
-            dispatch(
-              setSortOptions(typeAndOrderFromSortOptionString(itemValue))
-            )
-          }
-        >
-          {sortOptions.map((sortOption, i) => {
-            console.log(sortOption);
-
-            return (
-              <Picker.Item
-                key={"sortOption" + i}
-                label={sortOption.displayName}
-                value={sortOptionObjectToString(sortOption)}
-              />
-            );
-          })}
-        </Picker>
-      </Text>
+      <Text>Sorter på:</Text>
+      <View>
+        {options.map((option: SortOption, i) => (
+          <SortSelectButton
+            key={"sort-option-" + i}
+            title={option.displayName}
+            value={sortOptionObjectToString(option)}
+            selected={sortOptionIsEqual(option, sortOptionsRedux)}
+            onPress={() => dispatch(setSortOptions(option))}
+          />
+        ))}
+      </View>
     </View>
   );
 };
@@ -84,6 +87,9 @@ export const getSortOptionFromTypeAndOrder = (
 const sortOptionObjectToString = (sortOptions: SortOptions): string => {
   return sortOptions.sortType + "--" + sortOptions.sortOrder;
 };
+
+const sortOptionIsEqual = (a: SortOptions, b: SortOptions) =>
+  sortOptionObjectToString(a) === sortOptionObjectToString(b);
 
 const typeAndOrderFromSortOptionString = (
   sortOptionString: string
