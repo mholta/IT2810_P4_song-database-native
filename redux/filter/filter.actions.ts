@@ -25,7 +25,7 @@ export const toggleThemeSelection = (theme: FilterCategory) => {
   };
 };
 
-export const setSortOptions = (sortOptions: SortOptions) => ({
+export const setSortOptions = (sortOptions: SortOptions | null) => ({
   type: SET_SORT_OPTIONS,
   payload: {
     sortOptions,

@@ -23,7 +23,6 @@ const client = new ApolloClient({
           songs: {
             keyArgs: false,
             merge(existing, incoming) {
-              console.log(existing, incoming);
               if (!incoming) return existing;
               if (!existing) return incoming;
               const { songs, ...res } = incoming;
@@ -35,7 +34,6 @@ const client = new ApolloClient({
           artists: {
             keyArgs: false,
             merge(existing, incoming) {
-              console.log(existing, incoming);
               if (!incoming) return existing;
               if (!existing) return incoming;
               return [...existing, ...incoming];
@@ -44,7 +42,6 @@ const client = new ApolloClient({
           albums: {
             keyArgs: false,
             merge(existing, incoming) {
-              console.log(existing, incoming);
               if (!incoming) return existing;
               if (!existing) return incoming;
               return [...existing, ...incoming];

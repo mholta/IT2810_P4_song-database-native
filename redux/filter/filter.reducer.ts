@@ -31,7 +31,7 @@ const initialFilterState: FilterState = {
   allThemes: [...dummyThemes],
   selectedThemes: [],
   sortOptions: {
-    sortOrder: SortOrder.DESC,
+    order: SortOrder.DESC,
     sortType: SortType.RELEASE_DATE,
   },
   searchString: "",

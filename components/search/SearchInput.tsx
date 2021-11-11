@@ -19,10 +19,12 @@ const SearchInput = () => {
 
   const triggerSearch = () => {
     dispatch(setSearchString(localSearchString));
-    const newSortOption: SortOptions = {
-      sortOrder: SortOrder.DESC,
-      sortType: localSearchString ? SortType.RELEVANCE : SortType.RELEASE_DATE,
-    };
+    const newSortOption: SortOptions | null = localSearchString
+      ? null
+      : {
+          order: SortOrder.DESC,
+          sortType: SortType.RELEASE_DATE,
+        };
     dispatch(setSortOptions(newSortOption));
   };
 

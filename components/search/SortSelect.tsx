@@ -85,7 +85,7 @@ export const getSortOptionFromTypeAndOrder = (
 };
 
 const sortOptionObjectToString = (sortOptions: SortOptions): string => {
-  return sortOptions.sortType + "--" + sortOptions.sortOrder;
+  return sortOptions.sortType + "--" + sortOptions.order;
 };
 
 const sortOptionIsEqual = (a: SortOptions, b: SortOptions) =>
@@ -96,46 +96,46 @@ const typeAndOrderFromSortOptionString = (
 ): SortOptions => {
   const strings: string[] = sortOptionString.split("--");
   const sortType = strings[0] as SortType;
-  const sortOrder = strings[1] as SortOrder;
+  const order = strings[1] as SortOrder;
 
-  return { sortType, sortOrder };
+  return { sortType, order };
 };
 
 const relevanceSortOption: SortOption = {
   displayName: "relevanse",
   sortType: SortType.RELEVANCE,
-  sortOrder: SortOrder.DESC,
+  order: SortOrder.DESC,
 };
 
 const sortOptions: SortOption[] = [
   {
     displayName: "nyeste",
     sortType: SortType.RELEASE_DATE,
-    sortOrder: SortOrder.DESC,
+    order: SortOrder.DESC,
   },
   {
     displayName: "eldste",
     sortType: SortType.RELEASE_DATE,
-    sortOrder: SortOrder.ASC,
+    order: SortOrder.ASC,
   },
   {
     displayName: "Tittel A-Å",
     sortType: SortType.TITLE,
-    sortOrder: SortOrder.ASC,
+    order: SortOrder.ASC,
   },
   {
     displayName: "Tittel Å-A",
     sortType: SortType.TITLE,
-    sortOrder: SortOrder.DESC,
+    order: SortOrder.DESC,
   },
   {
     displayName: "Artist A-Å",
     sortType: SortType.ARTISTS,
-    sortOrder: SortOrder.ASC,
+    order: SortOrder.ASC,
   },
   {
     displayName: "Artist Å-A",
     sortType: SortType.ARTISTS,
-    sortOrder: SortOrder.DESC,
+    order: SortOrder.DESC,
   },
 ];

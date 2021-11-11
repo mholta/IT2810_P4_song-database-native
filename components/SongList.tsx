@@ -20,7 +20,7 @@ export const SongList = ({ navigation }: SongListProps) => {
   const selectedThemes: string[] = useSelector(
     (rootState: RootState) => rootState.filter.selectedThemes
   ).map((e) => e._id);
-  const sortOptions: SortOptions = useSelector(
+  const sortOptions: SortOptions | null = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
 
@@ -29,18 +29,24 @@ export const SongList = ({ navigation }: SongListProps) => {
       searchString: searchString,
       themes: selectedThemes,
       contributor: undefined,
-      ...sortOptions,
+      sortOptions: sortOptions,
     },
   };
 
-  const { loading, error, data, fetchMore } = useQuery(GET_SEARCH_RESULTS, {
-    ...options,
-    variables: {
-      ...options?.variables,
-      limit: 20,
-      page: 1,
-    },
-  });
+  const { loading, error, data, refetch, fetchMore } = useQuery(
+    GET_SEARCH_RESULTS,
+    {
+      ...options,
+      variables: {
+        ...options?.variables,
+        limit: 20,
+        page: 1,
+      },
+    }
+  );
+  useEffect(() => {
+    refetch(options.variables);
+  }, [searchString, sortOptions, selectedThemes.length]);
 
   const [songs, setSongs] = React.useState<Song[]>([]);
   const [loadedPageNum, setLoadedPageNum] = React.useState<number>(1);
@@ -109,8 +115,7 @@ const GET_SEARCH_RESULTS = gql`
     $searchString: String
     $themes: [String!]
     $contributor: String
-    $sortOrder: SortOrder!
-    $sortType: SortType!
+    $sortOptions: Sorting
     $page: Int!
     $limit: Int!
   ) {
@@ -119,7 +124,7 @@ const GET_SEARCH_RESULTS = gql`
       filter: { categories: $themes, contributor: $contributor }
       limit: $limit
       page: $page
-      sorting: { order: $sortOrder, sortType: $sortType }
+      sorting: $sortOptions
     ) {
       songs {
         _id

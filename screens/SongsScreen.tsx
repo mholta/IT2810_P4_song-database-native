@@ -11,9 +11,7 @@ const SongsScreen = ({ navigation }: RootTabScreenProps<"SongsTab">) => {
   return (
     <View style={styles.container}>
       <SearchFilterWrapper />
-      <View style={styles.resultsWrapper}>
-        <SongList navigation={navigation} />
-      </View>
+      <SongList navigation={navigation} />
     </View>
   );
 };
