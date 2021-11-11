@@ -1,33 +1,25 @@
 import React from "react";
 import { useState } from "react";
-import { View, Platform, Text } from "react-native";
-import NativeDatePicker from "react-native-date-picker";
-import { Button } from "react-native-elements";
+import { View, Platform } from "react-native";
+import NativeDatePicker from "@react-native-community/datetimepicker";
+import { DatePickerProps } from "./DatePicker";
 
-const DatePicker = ({}) => {
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
-  console.log(Platform.OS === "web");
-  if (Platform.OS === "web") {
-    return <Text>Hei</Text>;
-  } else {
+const DatePicker = ({ onChange, value }: DatePickerProps) => {
+  if (Platform.OS !== "web") {
     return (
       <View>
-        <Button title="Open" onPress={() => setOpen(true)} />
         <NativeDatePicker
-          modal
-          open={open}
-          date={date}
-          onConfirm={(date: Date) => {
-            setOpen(false);
-            setDate(date);
+          accessibilityLabel="Choose date"
+          value={value ?? new Date()}
+          onChange={(_: any, selectedDate?: Date) => {
+            selectedDate && onChange(selectedDate);
           }}
-          onCancel={() => {
-            setOpen(false);
-          }}
+          mode="date"
         />
       </View>
     );
   }
+
+  return <></>;
 };
 export default DatePicker;

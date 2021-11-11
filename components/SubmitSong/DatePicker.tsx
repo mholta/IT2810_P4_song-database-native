@@ -2,12 +2,12 @@ import React from "react";
 import { Text } from "react-native";
 import { SongState } from "./song/song.reducer";
 
-interface DatePickerProps {
-  state: SongState;
-  dispatch: React.Dispatch<any>;
+export interface DatePickerProps {
+  value: Date;
+  onChange: React.Dispatch<any>;
 }
 
-const DatePicker = ({ state, dispatch }: DatePickerProps) => {
-  return <Text>{state.releaseDate}</Text>;
+const DatePicker = ({ value, onChange }: DatePickerProps) => {
+  return <Text>{value.toLocaleDateString()}</Text>;
 };
 export default DatePicker;

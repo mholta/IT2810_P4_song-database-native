@@ -1,15 +1,7 @@
 import React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, DocumentNode } from "@apollo/client";
-import {
-  Text,
-  FlatList,
-  TextInput,
-  View,
-  StyleSheet,
-  ListRenderItem,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Text, FlatList, View, StyleSheet, ListRenderItem } from "react-native";
 import Modal from "react-native-modal";
 import { SearchBar, Button } from "react-native-elements";
 
@@ -87,20 +79,6 @@ const DropdownSearch = ({
           offset: data[dataKey].length,
         },
       });
-      // .then((fetchMoreResult: any) => {
-      //   if (fetchMoreResult.data[dataKey]) {
-      //     setOptions([...options, ...fetchMoreResult.data[dataKey]]);
-      //     return fetchMoreResult.data[dataKey].length;
-      //   }
-      //   return 0;
-      // })
-      // .then((skip: number) => {
-      //   if (skip < (variables.limit || 50)) {
-      //     setNoMore(true);
-      //   } else {
-      //     setElementCount(elementCount + skip);
-      //   }
-      // });
     }
   };
   const openModal = () => {
@@ -132,7 +110,6 @@ const DropdownSearch = ({
   };
   return (
     <View>
-      <Text>{label.replace(/^\w/, (match) => match.toUpperCase())}</Text>
       <Button
         type="outline"
         title={

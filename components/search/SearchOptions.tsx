@@ -12,7 +12,7 @@ import Categories from "./Categories";
 import SortSelect from "./SortSelect";
 
 const SearchOptions = () => {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 

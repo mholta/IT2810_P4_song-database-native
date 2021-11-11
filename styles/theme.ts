@@ -3,8 +3,17 @@ import { Theme } from "react-native-elements";
 type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
 
 declare module "react-native-elements" {
+  export interface FontSize {
+    h1: number;
+    h2: number;
+    h3: number;
+    p: number;
+    formHelperText: number;
+  }
   export interface Layout {
     borderRadius: { default: number; large: number; small: number };
+    padding: { screen: number };
+    space: { small: number; med: number; large: number };
   }
   export interface Colors {
     box: string;
@@ -14,6 +23,7 @@ declare module "react-native-elements" {
   export interface FullTheme {
     colors: RecursivePartial<Colors>;
     layout: Partial<Layout>;
+    fontSize: Partial<FontSize>;
   }
 }
 
@@ -21,6 +31,19 @@ const mainTheme: Theme = {
   colors: { primary: "#ffbf00", box: "black", text: "black" },
   layout: {
     borderRadius: { default: 10, large: 15, small: 5 },
+    padding: { screen: 10 },
+    space: {
+      small: 6,
+      med: 10,
+      large: 20,
+    },
+  },
+  fontSize: {
+    h1: 20,
+    h2: 17,
+    h3: 12,
+    p: 10,
+    formHelperText: 10,
   },
 };
 
@@ -57,12 +80,12 @@ interface Themes {
   light: Theme;
 }
 
-const addThemeColors = (colorsToAdd: Theme): Theme => ({
+const replaceColorsFromTheme = (themeToAddColorsFrom: Theme): Theme => ({
   ...mainTheme,
-  colors: { ...mainTheme.colors, ...colorsToAdd.colors },
+  colors: { ...mainTheme.colors, ...themeToAddColorsFrom.colors },
 });
 
 export const theme: Themes = {
-  dark: addThemeColors(darkThemeColors),
-  light: addThemeColors(lightThemeColors),
+  dark: replaceColorsFromTheme(darkThemeColors),
+  light: replaceColorsFromTheme(lightThemeColors),
 };

@@ -36,7 +36,11 @@ const ContributorsWithPreview = ({
       />
       <HelperText>{helperText}</HelperText>
       <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
-        {valueList.map((string, i) => string.trim() && <Chip>{string}</Chip>)}
+        {valueList
+          .filter((s) => s.trim())
+          .map((string, i) => (
+            <Chip key={label + "-contrib-" + i}>{string}</Chip>
+          ))}
       </View>
     </View>
   );

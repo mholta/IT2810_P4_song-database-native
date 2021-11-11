@@ -17,7 +17,7 @@ export const IconButton = ({ href, icon, text }: IconButtonProps) => {
       }}
     >
       {icon}
-      <Text style={styles.text}>{text}</Text>
+      {text && <Text style={styles.text}>{text}</Text>}
     </TouchableOpacity>
   );
 };

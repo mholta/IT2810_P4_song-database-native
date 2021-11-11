@@ -1,13 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  ScrollView,
-  View,
-  Platform,
-} from "react-native";
-import EditScreenInfo from "../components/EditScreenInfo";
+import { ScrollView, View } from "react-native";
 import {
   initialSongState,
   songReducer,
@@ -24,6 +16,7 @@ import {
   setMainArtist,
   setProducersString,
   setReleaseDate,
+  setReleaseDate as setSongReleaseDate,
   setTempo,
   setTime,
   setTitle,
@@ -38,9 +31,11 @@ import {
   ERROR_TITLE,
 } from "../components/SubmitSong/song/song.error";
 import ContributorsWithPreview from "../components/SubmitSong/ContributorsWithPreview";
+import { makeStyles } from "react-native-elements";
+import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
 
 export default function SubmitSong() {
-  const [state, dispatch] = useReducer(songReducer, initialSongState);
+  const [songState, dispatch] = useReducer(songReducer, initialSongState);
   const [albumState, albumDispatch] = useReducer(
     albumReducer,
     initialAlbumState
@@ -50,103 +45,151 @@ export default function SubmitSong() {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [
-    createNewAlbumModalOpen,
-    setCreateNewAlbumModalOpen,
-  ] = useState<boolean>(false);
+  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
+    useState<boolean>(true);
   // const client = useApolloClient();
   useEffect(() => {
-    setArtistId(state.mainArtistId);
-  }, [state.mainArtistId]);
+    setArtistId(songState.mainArtistId);
+  }, [songState.mainArtistId]);
+
+  const styles = useStyles();
   return (
     <ScrollView style={styles.container}>
       <ArtistSearch
         setValueCallback={(value: string) => dispatch(setMainArtist(value))}
       />
-      {state.mainArtistId !== "" && state.mainArtistId === artistId && (
+      {songState.mainArtistId !== "" && songState.mainArtistId === artistId && (
         <AlbumSearch
-          artistId={state.mainArtistId}
+          artistId={songState.mainArtistId}
           setValueCallback={(value: string) => {
             dispatch(setAlbumId(value));
           }}
-          setDateCallback={(date: Date | null) => {
-            dispatch(setReleaseDate(date));
+          setDateCallback={(date: Date | string | number | null) => {
+            date && dispatch(setSongReleaseDate(new Date(date)));
           }}
           setNewAlbumModalOpenCallback={() => {
             setCreateNewAlbumModalOpen(true);
           }}
         />
       )}
+
+      {/* Create new album */}
+      {createNewAlbumModalOpen && (
+        <CreateNewAlbum
+          state={albumState}
+          dispatch={albumDispatch}
+          setDateAlbumError={setDateAlbumError}
+          setDateCallback={(date: Date | null) => {
+            if (!songState.releaseDate) {
+              dispatch(setReleaseDate(date));
+            }
+          }}
+          setCreateNewAlbumModalOpen={setCreateNewAlbumModalOpen}
+        />
+      )}
+
+      {/* Song title */}
       <TextInput
+        style={styles.inputSection}
         label="Tittel*"
         onChangeText={(text) => dispatch(setTitle(text))}
         error={inputError === ERROR_TITLE}
-        value={state.title}
+        value={songState.title}
       />
-      <DatePicker state={state} dispatch={dispatch} />
+
+      {/* Release date. Equal to album release date when choosing album */}
+      <View style={styles.inputSection}>
+        <DatePicker
+          value={songState.releaseDate ?? songState.releaseDate ?? new Date()}
+          onChange={(date: Date) => dispatch(setSongReleaseDate(date))}
+        />
+      </View>
+
+      {/* Key */}
       <TextInput
+        style={styles.inputSection}
         label="Toneart*"
         placeholder="A"
         onChangeText={(text) => dispatch(setKey(text))}
         error={inputError === ERROR_KEY}
-        value={state.key}
+        value={songState.key}
       />
+
+      {/* Tempo */}
       <TextInput
+        style={styles.inputSection}
         label="Tempo"
         placeholder="120"
         onChangeText={(text) => dispatch(setTempo(text))}
-        value={state.tempo}
+        value={songState.tempo}
         keyboardType="numeric"
       />
+
+      {/* Time */}
       <TextInput
+        style={styles.inputSection}
         label="Time"
         placeholder="4/4"
         onChangeText={(text) => dispatch(setTime(text))}
         error={inputError === ERROR_TIME}
-        value={state.time}
+        value={songState.time}
       />
-      <ContributorsWithPreview
-        label="Låtskrivere"
-        id="writers"
-        placeholder="Ola, Kari"
-        onChangeText={(text) => dispatch(setWritersString(text))}
-        valueString={state.writersString}
-        valueList={state.writersList}
-      />
-      <ContributorsWithPreview
-        label="Produsent(er)"
-        id="producers"
-        placeholder="Ola, Kari (med-produsent)"
-        onChangeText={(text) => dispatch(setProducersString(text))}
-        valueString={state.producersString}
-        valueList={state.producersList}
-        helperText="Skriv rolle i parantes om ønskelig."
-      />
-      <ContributorsWithPreview
-        label="Bidragsytere"
-        id="contributors"
-        placeholder="Ola (gitar), Kari (vokal)"
-        onChangeText={(text) => dispatch(setContributorsString(text))}
-        valueString={state.contributorsString}
-        valueList={state.contributorsList}
-        helperText="Skriv rolle i parantes om ønskelig."
-      />
+
+      {/* Contributors */}
+      <View style={styles.inputSection}>
+        <ContributorsWithPreview
+          label="Låtskrivere"
+          id="writers"
+          placeholder="Ola, Kari"
+          onChangeText={(text) => dispatch(setWritersString(text))}
+          valueString={songState.writersString}
+          valueList={songState.writersList}
+          helperText="Navn separert med komma og evt rolle i parantes."
+        />
+      </View>
+
+      {/* Producers */}
+      <View style={styles.inputSection}>
+        <ContributorsWithPreview
+          label="Produsent(er)"
+          id="producers"
+          placeholder="Ola, Kari (med-produsent)"
+          onChangeText={(text) => dispatch(setProducersString(text))}
+          valueString={songState.producersString}
+          valueList={songState.producersList}
+          helperText="Navn separert med komma og evt rolle i parantes."
+        />
+      </View>
+
+      {/* Bidragsytere */}
+      <View style={styles.inputSection}>
+        <ContributorsWithPreview
+          label="Bidragsytere"
+          id="contributors"
+          placeholder="Ola (gitar), Kari (vokal)"
+          onChangeText={(text) => dispatch(setContributorsString(text))}
+          valueString={songState.contributorsString}
+          valueList={songState.contributorsList}
+          helperText="Navn separert med komma og evt rolle i parantes."
+        />
+      </View>
       <View
         style={styles.separator}
         // lightColor="#eee"
         // darkColor="rgba(255,255,255,0.1)"
       />
-      <EditScreenInfo path="/screens/SubmitSong.tsx" />
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
+    flex: 1,
+    padding: theme.layout?.padding?.screen,
   },
   title: {
-    fontSize: 20,
+    fontSize: theme.fontSize?.h1,
     fontWeight: "bold",
   },
   separator: {
@@ -154,4 +197,7 @@ const styles = StyleSheet.create({
     height: 1,
     width: "80%",
   },
-});
+  inputSection: {
+    marginVertical: theme.layout?.space?.small,
+  },
+}));
