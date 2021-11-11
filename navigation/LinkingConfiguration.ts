@@ -21,14 +21,14 @@ const linking: LinkingOptions<RootStackParamList> = {
               SongScreen: "song",
             },
           },
-          TabTwo: {
+          SubmitTab: {
             screens: {
               SubmitSongScreen: "Send inn en sang",
             },
           },
         },
       },
-      Modal: "modal",
+      Info: "modal",
       NotFound: "*",
     },
   },

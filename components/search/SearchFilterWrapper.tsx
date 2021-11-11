@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { View } from "react-native";
 import { makeStyles } from "react-native-elements";
-import { View } from "../Themed";
 import SearchInput from "./SearchInput";
 import SearchOptions from "./SearchOptions";
 

@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Linking, StyleSheet, TouchableOpacity } from "react-native";
-import { Text, View } from "./Themed";
+import { Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { makeStyles } from "react-native-elements";
+import { P } from "./generic/Text";
 
 interface IconButtonProps {
   href: string;
@@ -9,6 +10,7 @@ interface IconButtonProps {
 }
 
 export const IconButton = ({ href, icon, text }: IconButtonProps) => {
+  const styles = useStyles();
   return (
     <TouchableOpacity
       style={styles.button}
@@ -17,20 +19,20 @@ export const IconButton = ({ href, icon, text }: IconButtonProps) => {
       }}
     >
       {icon}
-      {text && <Text style={styles.text}>{text}</Text>}
+      {text && <P style={styles.text}>{text}</P>}
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   button: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: theme.layout?.space?.small,
   },
   text: {
     marginLeft: 10,
-    marginBottom: 20,
     textDecorationLine: "underline",
     fontSize: 18,
   },
-});
+}));

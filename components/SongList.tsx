@@ -1,12 +1,12 @@
 import { useQuery, gql } from "@apollo/client";
 import * as React from "react";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { SongListItem } from "../components/SongListItem";
-import { View } from "../components/Themed";
 import { RootState } from "../redux";
-import { SortOptions } from "../redux/filter/filter.types";
+import { SortOptions } from "../redux/filter/filter.reducer";
+import { makeStyles } from "react-native-elements";
+
 interface SongListProps {
   navigation: any;
 }
@@ -59,6 +59,8 @@ export const SongList = ({ navigation }: SongListProps) => {
     </TouchableOpacity>
   );
 
+  const styles = useStyles();
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -73,18 +75,20 @@ export const SongList = ({ navigation }: SongListProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    backgroundColor: theme.colors?.background,
   },
   listView: {
     width: "100%",
-    padding: 10,
+    padding: theme.layout?.padding?.med,
+    backgroundColor: "transparent",
   },
-});
+}));
 
 const GET_SEARCH_RESULTS = gql`
   query Songs(

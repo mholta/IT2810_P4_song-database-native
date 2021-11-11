@@ -1,10 +1,14 @@
 import React from "react";
 import { useStaticContent } from "./useStaticContent";
 
-const StaticContent = () => {
+interface StaticContentProvicerProps {
+  children: React.ReactNode;
+}
+
+const StaticContentProvider = ({ children }: StaticContentProvicerProps) => {
   // Hook for fetching categories and adding to redux. Only on initial page load
   useStaticContent();
-  return <></>;
+  return <>{children}</>;
 };
 
-export default StaticContent;
+export default StaticContentProvider;

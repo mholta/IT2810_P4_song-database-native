@@ -1,18 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, View, TouchableOpacity } from "react-native";
 import { Button, makeStyles } from "react-native-elements";
-import ReactNativeModal from "react-native-modal";
+import RNModal from "react-native-modal";
 import { useSelector } from "react-redux";
 import useColorScheme from "../../hooks/useColorScheme";
 import { RootState } from "../../redux";
 import { toggleThemeSelection } from "../../redux/filter/filter.actions";
-import { View } from "../Themed";
+import { Box } from "../generic/Box";
+import { IconButton } from "../IconButton";
 import Categories from "./Categories";
 import SortSelect from "./SortSelect";
 
 const SearchOptions = () => {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
@@ -36,43 +37,51 @@ const SearchOptions = () => {
           color={colorScheme === "dark" ? "#ddd" : "#111"}
         />
       </TouchableOpacity>
-      <ReactNativeModal
+      <RNModal
         isVisible={modalIsOpen}
         onBackdropPress={closeModal}
         useNativeDriverForBackdrop
       >
         <ScrollView>
-          <Button title="Lukk" onPress={closeModal} />
-          <SortSelect />
-          <View style={styles.centeredView}>
-            <Categories
-              title="Tema"
-              allCategories={allThemes}
-              selectedCategories={selectedThemes}
-              toggleActiveCategoryFunction={toggleThemeSelection}
-            />
-          </View>
+          <Box>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <FontAwesomeIcon
+                icon="times"
+                size={30}
+                color={colorScheme === "dark" ? "#ddd" : "#111"}
+              />
+            </TouchableOpacity>
+            <SortSelect />
+            <View>
+              <Categories
+                title="Tema"
+                allCategories={allThemes}
+                selectedCategories={selectedThemes}
+                toggleActiveCategoryFunction={toggleThemeSelection}
+              />
+            </View>
+          </Box>
         </ScrollView>
-      </ReactNativeModal>
+      </RNModal>
     </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-    padding: 10,
-  },
   button: {
     flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 22,
+    paddingHorizontal: theme.layout?.padding?.modal,
     backgroundColor: "transparent",
-    marginRight: 6,
+    marginRight: theme.layout?.space?.small,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 10,
   },
   container: {
     display: "flex",

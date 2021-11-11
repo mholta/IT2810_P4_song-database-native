@@ -1,4 +1,3 @@
-import { SortOptions } from "./filter.types";
 import {
   SET_ALL_THEMES,
   SET_SEARCH_STRING,
@@ -12,6 +11,11 @@ export interface FilterCategory {
   title: string;
 }
 
+export interface SortOptions {
+  sortType: string;
+  order: string;
+}
+
 export interface FilterState {
   allThemes: FilterCategory[];
   selectedThemes: FilterCategory[];
@@ -19,13 +23,9 @@ export interface FilterState {
   searchString: string;
 }
 
-const dummyThemes: FilterCategory[] = [
-  "hei",
-  "sann",
-  "du",
-  "er",
-  "bra",
-].map((e) => ({ _id: e, title: e }));
+const dummyThemes: FilterCategory[] = ["hei", "sann", "du", "er", "bra"].map(
+  (e) => ({ _id: e, title: e })
+);
 
 const initialFilterState: FilterState = {
   allThemes: [...dummyThemes],

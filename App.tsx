@@ -9,10 +9,14 @@ import Navigation from "./navigation";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faGlasses, faSlidersH } from "@fortawesome/free-solid-svg-icons";
-import StaticContent from "./hooks/StaticContent";
-import { ThemeProvider } from "react-native-elements";
-import { theme } from "./styles/theme";
+import { faSlidersH, faTimes } from "@fortawesome/free-solid-svg-icons";
+import StaticContentProvider from "./hooks/StaticContent";
+import { ThemeProvider as RNElementsThemeProvider } from "react-native-elements";
+import {
+  DefaultTheme,
+  Provider as RNPaperThemeProvider,
+} from "react-native-paper";
+import { useChooseTheme } from "./hooks/useChooseTheme";
 
 const client = new ApolloClient({
   link: createUploadLink({ uri: "http://it2810-21.idi.ntnu.no:4001/graphql" }),
@@ -56,11 +60,12 @@ const client = new ApolloClient({
   },
 });
 
-library.add(faSlidersH);
+library.add(faSlidersH, faTimes);
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  const theme = useChooseTheme(colorScheme);
 
   if (!isLoadingComplete) {
     return null;
@@ -69,13 +74,22 @@ export default function App() {
       <SafeAreaProvider>
         <ApolloProvider client={client}>
           <StoreProvider store={store}>
-            <ThemeProvider
-              theme={colorScheme === "dark" ? theme.dark : theme.light}
-            >
-              <StaticContent />
-              <Navigation colorScheme={colorScheme} />
-              <StatusBar />
-            </ThemeProvider>
+            <RNElementsThemeProvider theme={theme}>
+              <RNPaperThemeProvider
+                theme={{
+                  ...DefaultTheme,
+                  colors: {
+                    ...DefaultTheme.colors,
+                    primary: theme.colors?.primary ?? "white",
+                  },
+                }}
+              >
+                <StaticContentProvider>
+                  <Navigation colorScheme={colorScheme} />
+                  <StatusBar />
+                </StaticContentProvider>
+              </RNPaperThemeProvider>
+            </RNElementsThemeProvider>
           </StoreProvider>
         </ApolloProvider>
       </SafeAreaProvider>

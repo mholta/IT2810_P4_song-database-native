@@ -1,5 +1,4 @@
-import { SortType } from "./../../components/search/SortSelect";
-import { SortOptions } from "./filter.types";
+import { SortOptions } from "./filter.reducer";
 import { FilterCategory } from "./filter.reducer";
 import {
   SET_ALL_THEMES,
@@ -7,7 +6,6 @@ import {
   SET_SORT_OPTIONS,
   TOGGLE_THEME_SELECTION,
 } from "./filter.actionTypes";
-import { SortOrder } from "../../components/search/SortSelect";
 
 export const setAllThemes = (themes: FilterCategory[]) => ({
   type: SET_ALL_THEMES,

@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useEffect, useReducer, useState } from "react";
+import { View } from "react-native";
 import {
   initialSongState,
   songReducer,
@@ -39,6 +39,7 @@ import { Button, makeStyles } from "react-native-elements";
 import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
 import { formatKey, formatTime } from "../utils/inputChecks";
 import { useMutation, gql } from "@apollo/client";
+import ScrollContainer from "../components/generic/ScreenWrapper";
 
 const SubmitSong = () => {
   const [songState, songDispatch] = useReducer(songReducer, initialSongState);
@@ -54,7 +55,7 @@ const SubmitSong = () => {
   const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
     useState<boolean>(false);
 
-    useEffect(() => {
+  useEffect(() => {
     setArtistId(songState.mainArtistId);
   }, [songState.mainArtistId]);
 
@@ -102,7 +103,7 @@ const SubmitSong = () => {
     return () => setSend(false);
   }, [send]);
   const handleSubmit = (e: any) => {
-/*     console.log({
+    /*     console.log({
       album: createNewAlbumModalOpen ? albumState.title : songState.albumId,
       artists: songState.artists,
       categories: songState.themes.map((theme) => theme._id),
@@ -135,7 +136,7 @@ const SubmitSong = () => {
     }
   };
   return (
-    <ScrollView style={styles.container}>
+    <ScrollContainer>
       <ArtistSearch
         setValueCallback={(value: string) => songDispatch(setMainArtist(value))}
       />
@@ -221,6 +222,7 @@ const SubmitSong = () => {
         onChangeText={(text) => songDispatch(setTime(text))}
         error={inputError === ERROR_TIME}
         value={songState.time}
+        theme={{ colors: { text: "red" } }}
       />
 
       {/* Contributors */}
@@ -263,7 +265,7 @@ const SubmitSong = () => {
       </View>
       <Button title="Send inn" onPress={handleSubmit} />
       <View style={styles.separator} />
-    </ScrollView>
+    </ScrollContainer>
   );
 };
 
@@ -309,11 +311,6 @@ const CREATE_SONG_MUTATION = gql`
 `;
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    width: "100%",
-    flex: 1,
-    padding: theme.layout?.padding?.screen,
-  },
   title: {
     fontSize: theme.fontSize?.h1,
     fontWeight: "bold",
@@ -325,6 +322,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputSection: {
     marginVertical: theme.layout?.space?.small,
+    backgroundColor: theme.colors?.grey3,
   },
 }));
 

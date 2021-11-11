@@ -12,12 +12,13 @@ declare module "react-native-elements" {
   }
   export interface Layout {
     borderRadius: { default: number; large: number; small: number };
-    padding: { screen: number };
+    padding: { screen: number; modal: number; med: number };
     space: { small: number; med: number; large: number };
   }
   export interface Colors {
     box: string;
     text: string;
+    background: string;
   }
 
   export interface FullTheme {
@@ -28,10 +29,15 @@ declare module "react-native-elements" {
 }
 
 const mainTheme: Theme = {
-  colors: { primary: "#ffbf00", box: "black", text: "black" },
+  colors: {
+    primary: "#ffbf00",
+    box: "black",
+    text: "black",
+    background: "#fff",
+  },
   layout: {
     borderRadius: { default: 10, large: 15, small: 5 },
-    padding: { screen: 10 },
+    padding: { screen: 10, modal: 30, med: 10 },
     space: {
       small: 6,
       med: 10,
@@ -39,10 +45,10 @@ const mainTheme: Theme = {
     },
   },
   fontSize: {
-    h1: 20,
-    h2: 17,
-    h3: 12,
-    p: 10,
+    h1: 26,
+    h2: 20,
+    h3: 20,
+    p: 15,
     formHelperText: 10,
   },
 };
@@ -58,6 +64,7 @@ const lightThemeColors: Theme = {
     black: "#000",
     box: "#ddd",
     text: "#060606",
+    background: "#fff",
   },
 };
 
@@ -66,12 +73,13 @@ const darkThemeColors: Theme = {
     grey0: "#121212",
     grey1: "#181818",
     grey2: "#282828",
-    grey3: "#404040",
+    grey3: "#333",
     grey4: "#b3b3b3",
     grey5: "#aeaeae",
     black: "#fff",
     box: "#222",
-    text: "#aeaeae",
+    text: "#eaeaea",
+    background: "#040404",
   },
 };
 

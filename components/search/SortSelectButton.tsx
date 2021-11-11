@@ -1,6 +1,12 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityBase,
+} from "react-native";
+import { Button, makeStyles } from "react-native-elements";
+import { P } from "../generic/Text";
 
 interface SortSelectButtonProps {
   onPress: () => void;
@@ -15,18 +21,18 @@ const SortSelectButton = ({
   title,
   value,
 }: SortSelectButtonProps) => {
+  const styles = useStyles();
+
   return (
-    <Button
-      title={title}
-      onPress={onPress}
-      type={selected ? "solid" : "outline"}
-      style={styles.button}
-    />
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <P>{title}</P>
+    </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {},
-});
+const useStyles = makeStyles((theme) => ({
+  button: { marginBottom: theme.layout?.space?.small },
+  buttonText: { fontSize: theme.fontSize?.h3 },
+}));
 
 export default SortSelectButton;

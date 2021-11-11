@@ -14,9 +14,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 
-import Colors from "../constants/Colors";
+import { baseColors } from "../utils/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import ModalScreen from "../screens/ModalScreen";
+import InfoScreen from "../screens/InfoScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SongScreen from "../screens/SongScreen";
 import SongsScreen from "../screens/SongsScreen";
@@ -28,16 +28,14 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
-function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
-      <RootNavigator />
-    </NavigationContainer>
-  );
-}
+const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => (
+  <NavigationContainer
+    linking={LinkingConfiguration}
+    theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+  >
+    <RootNavigator />
+  </NavigationContainer>
+);
 
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
@@ -45,30 +43,28 @@ function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SongScreen"
-        component={SongScreen}
-        options={{ title: "Sang" }}
-      />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
-}
+const RootNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Root"
+      component={BottomTabNavigator}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="SongScreen"
+      component={SongScreen}
+      options={{ title: "Sang" }}
+    />
+    <Stack.Screen
+      name="NotFound"
+      component={NotFoundScreen}
+      options={{ title: "Ikke funnet" }}
+    />
+    <Stack.Group screenOptions={{ presentation: "modal" }}>
+      <Stack.Screen name="Info" component={InfoScreen} />
+    </Stack.Group>
+  </Stack.Navigator>
+);
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
@@ -76,14 +72,14 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-function BottomTabNavigator() {
+const BottomTabNavigator = () => {
   const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
       initialRouteName="SongsTab"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: baseColors[colorScheme].tint,
       }}
     >
       <BottomTab.Screen
@@ -91,10 +87,10 @@ function BottomTabNavigator() {
         component={SongsScreen}
         options={({ navigation }: RootTabScreenProps<"SongsTab">) => ({
           title: "Sanger",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="music" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => navigation.navigate("Modal")}
+              onPress={() => navigation.navigate("Info")}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -102,7 +98,7 @@ function BottomTabNavigator() {
               <FontAwesome
                 name="info-circle"
                 size={25}
-                color={Colors[colorScheme].text}
+                color={baseColors[colorScheme].text}
                 style={{ marginRight: 15 }}
               />
             </Pressable>
@@ -110,25 +106,20 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="SubmitTab"
         component={SubmitSong}
         options={{
           title: "Send inn en sang",
-          // tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="send" color={color} />,
         }}
       />
     </BottomTab.Navigator>
   );
-}
+};
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
+const TabBarIcon = (props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+}) => <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
 
 export default Navigation;

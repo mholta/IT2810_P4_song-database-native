@@ -1,15 +1,25 @@
 import React from "react";
+import { Text, View } from "react-native";
+import { makeStyles } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
-import { SortOptions } from "../../redux/filter/filter.types";
-import { Text, View } from "../Themed";
+import { SortOptions } from "../../redux/filter/filter.reducer";
+import { H2 } from "../generic/Text";
 import SortSelectButton from "./SortSelectButton";
 
 const SortSelect = () => {
   const sortOptionsRedux: SortOptions = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
+  const currentSortOptionString: string = getSortOptionFromTypeAndOrder(
+    sortOptionsRedux.sortType as SortType,
+    sortOptionsRedux.order as SortOrder
+  )
+    .displayName.split("")
+    .map((e, i) => (i ? e : e.toLowerCase()))
+    .join("");
+
   const dispatch = useDispatch();
 
   const showRelevanceSortOption: boolean = useSelector(
@@ -22,10 +32,12 @@ const SortSelect = () => {
     ? [relevanceSortOption, ...sortOptions]
     : [...sortOptions];
 
+  const styles = useStyles();
+
   return (
     <View>
-      <Text>Sorter på:</Text>
-      <View>
+      <H2>Sorter på {currentSortOptionString}</H2>
+      <View style={styles.listWrapper}>
         {options.map((option: SortOptionWithDisplayName, i) => (
           <SortSelectButton
             key={"sort-option-" + i}
@@ -45,6 +57,10 @@ const SortSelect = () => {
     </View>
   );
 };
+
+const useStyles = makeStyles((theme) => ({
+  listWrapper: {},
+}));
 
 export default SortSelect;
 
@@ -111,19 +127,19 @@ const typeAndOrderFromSortOptionString = (
 };
 
 const relevanceSortOption: SortOptionWithDisplayName = {
-  displayName: "relevanse",
+  displayName: "Relevanse",
   sortType: SortType.RELEVANCE,
   order: SortOrder.DESC,
 };
 
 const sortOptions: SortOptionWithDisplayName[] = [
   {
-    displayName: "nyeste",
+    displayName: "Nyeste",
     sortType: SortType.RELEASE_DATE,
     order: SortOrder.DESC,
   },
   {
-    displayName: "eldste",
+    displayName: "Eldste",
     sortType: SortType.RELEASE_DATE,
     order: SortOrder.ASC,
   },

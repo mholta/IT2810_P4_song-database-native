@@ -124,7 +124,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     flex: 1,
-    padding: theme.layout?.padding?.screen,
   },
   title: {
     fontSize: theme.fontSize?.h1,

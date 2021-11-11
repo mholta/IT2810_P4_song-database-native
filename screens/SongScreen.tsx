@@ -2,10 +2,11 @@ import { useQuery, gql } from "@apollo/client";
 import { faApple, faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as React from "react";
-import { Image, ScrollView, StyleSheet } from "react-native";
+import { Image, ScrollView, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { Box } from "../components/generic/Box";
+import { P } from "../components/generic/Text";
 import { IconButton } from "../components/IconButton";
-import { Text, View } from "../components/Themed";
 
 interface SongScreenProps {
   route: any;
@@ -31,52 +32,52 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
               source={{ uri: data.song.album.picture }}
               style={styles.picture}
             ></Image>
-            <Text style={styles.title}>{data.song.title}</Text>
-            <Text>
+            <P style={styles.title}>{data.song.title}</P>
+            <P>
               {data.song.album.title} (
               {new Date(data.song.album.releaseDate).getFullYear()}) -{" "}
               {data.song.artists.map((a: any) => a.name).join(", ")}
-            </Text>
-            {data.song.categories && (
-              <View style={styles.infoBox}>
-                <Text style={styles.infoBoxTitle}>Tema: </Text>
-                <Text>
+            </P>
+            {data.song.categories.length > 0 && (
+              <Box>
+                <P style={styles.infoBoxTitle}>Tema: </P>
+                <P>
                   {data.song.categories.map((c: any) => c.title).join(", ")}
-                </Text>
-              </View>
+                </P>
+              </Box>
             )}
             {data.song.writers && (
-              <View style={styles.infoBox}>
-                <Text style={styles.infoBoxTitle}>Tekst og melodi: </Text>
-                <Text>{data.song.writers.join(", ")}</Text>
-              </View>
+              <Box>
+                <P style={styles.infoBoxTitle}>Tekst og melodi: </P>
+                <P>{data.song.writers.join(", ")}</P>
+              </Box>
             )}
             {data.song.producers && (
-              <View style={styles.infoBox}>
-                <Text style={styles.infoBoxTitle}>Produsenter: </Text>
-                <Text>{data.song.producers.join(", ")}</Text>
-              </View>
+              <Box>
+                <P style={styles.infoBoxTitle}>Produsenter: </P>
+                <P>{data.song.producers.join(", ")}</P>
+              </Box>
             )}
-            <View style={[styles.infoBox, styles.infoFields]}>
+            <Box style={styles.infoFields}>
               {data.song.key && (
                 <View style={styles.infoField}>
-                  <Text style={styles.infoBoxTitle}>Toneart: </Text>
-                  <Text>{data.song.key}</Text>
+                  <P style={styles.infoBoxTitle}>Toneart: </P>
+                  <P>{data.song.key}</P>
                 </View>
               )}
               {data.song.tempo && (
                 <View style={styles.infoField}>
-                  <Text style={styles.infoBoxTitle}>Tempo: </Text>
-                  <Text>{data.song.tempo} BPM</Text>
+                  <P style={styles.infoBoxTitle}>Tempo: </P>
+                  <P>{data.song.tempo} BPM</P>
                 </View>
               )}
               {data.song.time && (
                 <View style={styles.infoField}>
-                  <Text style={styles.infoBoxTitle}>Takt: </Text>
-                  <Text>{data.song.time}</Text>
+                  <P style={styles.infoBoxTitle}>Takt: </P>
+                  <P>{data.song.time}</P>
                 </View>
               )}
-            </View>
+            </Box>
 
             <View style={styles.iconButtons}>
               {data.song.spotify && (
