@@ -53,8 +53,8 @@ const SubmitSong = () => {
   const [artistId, setArtistId] = useState("");
   const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
     useState<boolean>(false);
-  // const client = useApolloClient();
-  useEffect(() => {
+
+    useEffect(() => {
     setArtistId(songState.mainArtistId);
   }, [songState.mainArtistId]);
 
@@ -102,7 +102,7 @@ const SubmitSong = () => {
     return () => setSend(false);
   }, [send]);
   const handleSubmit = (e: any) => {
-    console.log({
+/*     console.log({
       album: createNewAlbumModalOpen ? albumState.title : songState.albumId,
       artists: songState.artists,
       categories: songState.themes.map((theme) => theme._id),
@@ -118,7 +118,7 @@ const SubmitSong = () => {
       writers: songState.writersList,
       file: albumState.coverImage,
       albumReleaseDate: albumState.releaseDate,
-    });
+    }); */
     try {
       if (songState.key) songDispatch(setKey(formatKey(songState.key)));
       if (songState.time) songDispatch(setTime(formatTime(songState.time)));
@@ -127,7 +127,6 @@ const SubmitSong = () => {
       if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
       setSend(true);
     } catch (err) {
-      console.log(err);
       if (err instanceof Error) setInputError(err.message);
       else {
         setInputError(ERROR_UNKOWN);
