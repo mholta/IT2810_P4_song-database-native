@@ -30,7 +30,7 @@ declare module "react-native-elements" {
 
 const mainTheme: Theme = {
   colors: {
-    primary: "#ffbf00",
+    primary: "#d8a200",
     box: "black",
     text: "black",
     background: "#fff",

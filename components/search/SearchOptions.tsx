@@ -41,9 +41,10 @@ const SearchOptions = () => {
         isVisible={modalIsOpen}
         onBackdropPress={closeModal}
         useNativeDriverForBackdrop
+        swipeDirection="down"
       >
         <ScrollView>
-          <Box>
+          <Box style={{ flex: 0 }}>
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
               <FontAwesomeIcon
                 icon="times"
