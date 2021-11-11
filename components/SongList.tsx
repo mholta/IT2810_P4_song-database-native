@@ -3,7 +3,6 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { Song } from "../api/types";
 import { SongListItem } from "../components/SongListItem";
 import { View } from "../components/Themed";
 import { RootState } from "../redux";
@@ -33,37 +32,24 @@ export const SongList = ({ navigation }: SongListProps) => {
     },
   };
 
-  const { loading, error, data, refetch, fetchMore } = useQuery(
-    GET_SEARCH_RESULTS,
-    {
-      ...options,
-      variables: {
-        ...options?.variables,
-        limit: 20,
-        page: 1,
-      },
-    }
-  );
+  const { data, refetch, fetchMore } = useQuery(GET_SEARCH_RESULTS, {
+    ...options,
+    variables: {
+      ...options?.variables,
+      limit: 20,
+      page: 1,
+    },
+  });
+
   useEffect(() => {
     refetch(options.variables);
+    setLoadedPageNum(1);
   }, [searchString, sortOptions, selectedThemes.length]);
 
-  const [songs, setSongs] = React.useState<Song[]>([]);
   const [loadedPageNum, setLoadedPageNum] = React.useState<number>(1);
-  const [lastPageNum, setLastPageNum] = React.useState<number>(1);
-
-  // Set initial songs fetched
-  useEffect(() => {
-    if (data?.songs?.songs) setSongs(data.songs.songs);
-  }, [data]);
-
-  // Set total amount of pages count
-  useEffect(() => {
-    data?.songs?.pages && setLastPageNum(data?.songs?.pages);
-  }, [data?.songs?.pages]);
 
   const loadNextPage = () => {
-    if (loadedPageNum < lastPageNum) {
+    if (loadedPageNum < (data?.songs?.pages ?? 1)) {
       fetchMore({
         variables: {
           page: loadedPageNum + 1,
@@ -83,16 +69,14 @@ export const SongList = ({ navigation }: SongListProps) => {
 
   return (
     <View style={styles.container}>
-      {!loading && (
-        <FlatList
-          data={songs}
-          renderItem={renderItem}
-          style={styles.listView}
-          keyExtractor={(item) => item._id}
-          onEndReached={loadNextPage}
-          onEndReachedThreshold={0.25}
-        />
-      )}
+      <FlatList
+        data={data?.songs?.songs ?? []}
+        renderItem={renderItem}
+        style={styles.listView}
+        keyExtractor={(item) => item._id}
+        onEndReached={loadNextPage}
+        onEndReachedThreshold={0.25}
+      />
     </View>
   );
 };

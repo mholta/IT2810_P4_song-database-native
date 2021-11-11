@@ -1,11 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FilterCategory } from "../../api/types";
 import { RootState } from "../../redux";
-import {
-  setSortOptions,
-  toggleThemeSelection,
-} from "../../redux/filter/filter.actions";
+import { setSortOptions } from "../../redux/filter/filter.actions";
 import { SortOptions } from "../../redux/filter/filter.types";
 import { Text, View } from "../Themed";
 import SortSelectButton from "./SortSelectButton";
@@ -22,7 +18,7 @@ const SortSelect = () => {
     ? true
     : false;
 
-  const options: SortOption[] = showRelevanceSortOption
+  const options: SortOptionWithDisplayName[] = showRelevanceSortOption
     ? [relevanceSortOption, ...sortOptions]
     : [...sortOptions];
 
@@ -30,13 +26,19 @@ const SortSelect = () => {
     <View>
       <Text>Sorter på:</Text>
       <View>
-        {options.map((option: SortOption, i) => (
+        {options.map((option: SortOptionWithDisplayName, i) => (
           <SortSelectButton
             key={"sort-option-" + i}
             title={option.displayName}
             value={sortOptionObjectToString(option)}
             selected={sortOptionIsEqual(option, sortOptionsRedux)}
-            onPress={() => dispatch(setSortOptions(option))}
+            onPress={() =>
+              dispatch(
+                setSortOptions(
+                  sortOptionsWithDisplayNameToPlainSortOptions(option)
+                )
+              )
+            }
           />
         ))}
       </View>
@@ -53,7 +55,7 @@ export enum SortType {
   RELEVANCE = "relevance",
 }
 
-interface SortOption extends SortOptions {
+interface SortOptionWithDisplayName extends SortOptions {
   displayName: string;
 }
 
@@ -65,7 +67,7 @@ export enum SortOrder {
 export const getSortOptionFromTypeAndOrder = (
   sortType: SortType,
   sortOrder: SortOrder
-): SortOption => {
+): SortOptionWithDisplayName => {
   switch (sortType) {
     case SortType.RELEASE_DATE:
       return sortOrder === SortOrder.DESC ? sortOptions[0] : sortOptions[1];
@@ -91,6 +93,13 @@ const sortOptionObjectToString = (sortOptions: SortOptions): string => {
 const sortOptionIsEqual = (a: SortOptions, b: SortOptions) =>
   sortOptionObjectToString(a) === sortOptionObjectToString(b);
 
+const sortOptionsWithDisplayNameToPlainSortOptions = (
+  sortOptionsWithDisplayName: SortOptionWithDisplayName
+): SortOptions => ({
+  order: sortOptionsWithDisplayName.order,
+  sortType: sortOptionsWithDisplayName.sortType,
+});
+
 const typeAndOrderFromSortOptionString = (
   sortOptionString: string
 ): SortOptions => {
@@ -101,13 +110,13 @@ const typeAndOrderFromSortOptionString = (
   return { sortType, order };
 };
 
-const relevanceSortOption: SortOption = {
+const relevanceSortOption: SortOptionWithDisplayName = {
   displayName: "relevanse",
   sortType: SortType.RELEVANCE,
   order: SortOrder.DESC,
 };
 
-const sortOptions: SortOption[] = [
+const sortOptions: SortOptionWithDisplayName[] = [
   {
     displayName: "nyeste",
     sortType: SortType.RELEASE_DATE,
