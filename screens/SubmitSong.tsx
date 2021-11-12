@@ -15,7 +15,6 @@ import {
   setKey,
   setMainArtist,
   setProducersString,
-  setReleaseDate,
   setReleaseDate as setSongReleaseDate,
   setTempo,
   setTime,
@@ -26,16 +25,23 @@ import AlbumSearch from "../components/SubmitSong/AlbumSearch";
 import DatePicker from "../components/SubmitSong/DatePicker";
 import { TextInput } from "react-native-paper";
 import {
+  ERROR_ALBUM,
   ERROR_KEY,
+  ERROR_NETWORK,
+  ERROR_RELEASE_DATE,
+  ERROR_RELEASE_DATE_ALBUM,
   ERROR_TIME,
   ERROR_TITLE,
+  ERROR_UNKOWN,
 } from "../components/SubmitSong/song/song.error";
 import ContributorsWithPreview from "../components/SubmitSong/ContributorsWithPreview";
-import { makeStyles } from "react-native-elements";
+import { Button, makeStyles } from "react-native-elements";
 import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
+import { formatKey, formatTime } from "../utils/inputChecks";
+import { useMutation, gql } from "@apollo/client";
 
 export default function SubmitSong() {
-  const [songState, dispatch] = useReducer(songReducer, initialSongState);
+  const [songState, songDispatch] = useReducer(songReducer, initialSongState);
   const [albumState, albumDispatch] = useReducer(
     albumReducer,
     initialAlbumState
@@ -45,33 +51,113 @@ export default function SubmitSong() {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
-    useState<boolean>(true);
+  const [
+    createNewAlbumModalOpen,
+    setCreateNewAlbumModalOpen,
+  ] = useState<boolean>(false);
   // const client = useApolloClient();
   useEffect(() => {
     setArtistId(songState.mainArtistId);
   }, [songState.mainArtistId]);
 
   const styles = useStyles();
+  const [createSong, { data, loading }] = useMutation(CREATE_SONG_MUTATION, {
+    onError: (err) => {
+      if (err.message.includes("E11000 duplicate key error")) {
+        if (err.message.includes(".songs")) {
+          setInputError(ERROR_TITLE);
+        } else if (err.message.includes(".albums")) {
+          setInputError(ERROR_ALBUM);
+        } else setInputError(ERROR_UNKOWN);
+      } else if (err.networkError) {
+        setInputError(ERROR_NETWORK);
+      } else {
+        setInputError(ERROR_UNKOWN);
+      }
+    },
+  });
+  useEffect(() => {
+    if (send) {
+      // Create song
+      createSong({
+        variables: {
+          album: createNewAlbumModalOpen ? albumState.title : songState.albumId,
+          artists: songState.artists,
+          categories: songState.themes.map((theme) => theme._id),
+          contibutors: songState.contributorsList,
+          iTunes: songState.appleMusicLink,
+          key: songState.key,
+          producers: songState.producersList,
+          releaseDate: songState.releaseDate, // TODO: Implement date picker in song
+          spotify: songState.spotifyLink,
+          tempo: songState.tempo,
+          time: songState.time,
+          title: songState.title,
+          writers: songState.writersList,
+          file: albumState.coverImage,
+          albumReleaseDate: albumState.releaseDate,
+        },
+      });
+    }
+    setSend(false);
+  }, [send]);
+  const handleSubmit = (e: any) => {
+    console.log({
+      album: createNewAlbumModalOpen ? albumState.title : songState.albumId,
+      artists: songState.artists,
+      categories: songState.themes.map((theme) => theme._id),
+      contibutors: songState.contributorsList,
+      iTunes: songState.appleMusicLink,
+      key: songState.key,
+      producers: songState.producersList,
+      releaseDate: songState.releaseDate, // TODO: Implement date picker in song
+      spotify: songState.spotifyLink,
+      tempo: songState.tempo,
+      time: songState.time,
+      title: songState.title,
+      writers: songState.writersList,
+      file: albumState.coverImage,
+      albumReleaseDate: albumState.releaseDate,
+    });
+    try {
+      if (songState.key) songDispatch(setKey(formatKey(songState.key)));
+      if (songState.time) songDispatch(setTime(formatTime(songState.time)));
+      if (createNewAlbumModalOpen && !albumState.releaseDate)
+        throw Error(ERROR_RELEASE_DATE_ALBUM);
+      if (!songState.releaseDate) throw Error(ERROR_RELEASE_DATE);
+      if (dateError) throw Error(ERROR_RELEASE_DATE);
+      if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
+      setSend(true);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof Error) setInputError(err.message);
+      else {
+        setInputError(ERROR_UNKOWN);
+      }
+      return;
+    }
+  };
   return (
     <ScrollView style={styles.container}>
       <ArtistSearch
-        setValueCallback={(value: string) => dispatch(setMainArtist(value))}
+        setValueCallback={(value: string) => songDispatch(setMainArtist(value))}
       />
-      {songState.mainArtistId !== "" && songState.mainArtistId === artistId && (
-        <AlbumSearch
-          artistId={songState.mainArtistId}
-          setValueCallback={(value: string) => {
-            dispatch(setAlbumId(value));
-          }}
-          setDateCallback={(date: Date | string | number | null) => {
-            date && dispatch(setSongReleaseDate(new Date(date)));
-          }}
-          setNewAlbumModalOpenCallback={() => {
-            setCreateNewAlbumModalOpen(true);
-          }}
-        />
-      )}
+      {songState.mainArtistId !== "" &&
+        songState.mainArtistId === artistId &&
+        !createNewAlbumModalOpen && (
+          <AlbumSearch
+            artistId={songState.mainArtistId}
+            setValueCallback={(value: string) => {
+              songDispatch(setAlbumId(value));
+            }}
+            setDateCallback={(date: Date | string | number | null) => {
+              date && songDispatch(setSongReleaseDate(new Date(date)));
+            }}
+            setNewAlbumModalOpenCallback={() => {
+              setCreateNewAlbumModalOpen(true);
+            }}
+          />
+        )}
 
       {/* Create new album */}
       {createNewAlbumModalOpen && (
@@ -81,7 +167,7 @@ export default function SubmitSong() {
           setDateAlbumError={setDateAlbumError}
           setDateCallback={(date: Date | null) => {
             if (!songState.releaseDate) {
-              dispatch(setReleaseDate(date));
+              songDispatch(setSongReleaseDate(date));
             }
           }}
           setCreateNewAlbumModalOpen={setCreateNewAlbumModalOpen}
@@ -92,7 +178,7 @@ export default function SubmitSong() {
       <TextInput
         style={styles.inputSection}
         label="Tittel*"
-        onChangeText={(text) => dispatch(setTitle(text))}
+        onChangeText={(text) => songDispatch(setTitle(text))}
         error={inputError === ERROR_TITLE}
         value={songState.title}
       />
@@ -101,7 +187,7 @@ export default function SubmitSong() {
       <View style={styles.inputSection}>
         <DatePicker
           value={songState.releaseDate ?? songState.releaseDate ?? new Date()}
-          onChange={(date: Date) => dispatch(setSongReleaseDate(date))}
+          onChange={(date: Date) => songDispatch(setSongReleaseDate(date))}
         />
       </View>
 
@@ -110,7 +196,7 @@ export default function SubmitSong() {
         style={styles.inputSection}
         label="Toneart*"
         placeholder="A"
-        onChangeText={(text) => dispatch(setKey(text))}
+        onChangeText={(text) => songDispatch(setKey(text))}
         error={inputError === ERROR_KEY}
         value={songState.key}
       />
@@ -120,7 +206,7 @@ export default function SubmitSong() {
         style={styles.inputSection}
         label="Tempo"
         placeholder="120"
-        onChangeText={(text) => dispatch(setTempo(text))}
+        onChangeText={(text) => songDispatch(setTempo(text))}
         value={songState.tempo}
         keyboardType="numeric"
       />
@@ -130,7 +216,7 @@ export default function SubmitSong() {
         style={styles.inputSection}
         label="Time"
         placeholder="4/4"
-        onChangeText={(text) => dispatch(setTime(text))}
+        onChangeText={(text) => songDispatch(setTime(text))}
         error={inputError === ERROR_TIME}
         value={songState.time}
       />
@@ -141,10 +227,10 @@ export default function SubmitSong() {
           label="Låtskrivere"
           id="writers"
           placeholder="Ola, Kari"
-          onChangeText={(text) => dispatch(setWritersString(text))}
+          onChangeText={(text) => songDispatch(setWritersString(text))}
           valueString={songState.writersString}
           valueList={songState.writersList}
-          helperText="Navn separert med komma og evt rolle i parantes."
+          helperText="Navn separert med komma."
         />
       </View>
 
@@ -154,7 +240,7 @@ export default function SubmitSong() {
           label="Produsent(er)"
           id="producers"
           placeholder="Ola, Kari (med-produsent)"
-          onChangeText={(text) => dispatch(setProducersString(text))}
+          onChangeText={(text) => songDispatch(setProducersString(text))}
           valueString={songState.producersString}
           valueList={songState.producersList}
           helperText="Navn separert med komma og evt rolle i parantes."
@@ -167,12 +253,13 @@ export default function SubmitSong() {
           label="Bidragsytere"
           id="contributors"
           placeholder="Ola (gitar), Kari (vokal)"
-          onChangeText={(text) => dispatch(setContributorsString(text))}
+          onChangeText={(text) => songDispatch(setContributorsString(text))}
           valueString={songState.contributorsString}
           valueList={songState.contributorsList}
           helperText="Navn separert med komma og evt rolle i parantes."
         />
       </View>
+      <Button title="Send inn" onPress={handleSubmit} />
       <View
         style={styles.separator}
         // lightColor="#eee"
@@ -181,6 +268,47 @@ export default function SubmitSong() {
     </ScrollView>
   );
 }
+
+const CREATE_SONG_MUTATION = gql`
+  mutation CreateSong(
+    $album: String!
+    $artists: [String!]!
+    $categories: [String!]
+    $contributors: [String!]
+    $iTunes: String
+    $key: String
+    $producers: [String!]
+    $releaseDate: Date!
+    $spotify: String
+    $tempo: String
+    $time: String
+    $title: String!
+    $writers: [String!]
+    $file: Upload
+    $albumReleaseDate: Date
+  ) {
+    createSong(
+      album: $album
+      artists: $artists
+      categories: $categories
+      contributors: $contributors
+      iTunes: $iTunes
+      key: $key
+      producers: $producers
+      releaseDate: $releaseDate
+      spotify: $spotify
+      tempo: $tempo
+      time: $time
+      title: $title
+      writers: $writers
+      file: $file
+      albumReleaseDate: $albumReleaseDate
+    ) {
+      _id
+      title
+    }
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
   container: {

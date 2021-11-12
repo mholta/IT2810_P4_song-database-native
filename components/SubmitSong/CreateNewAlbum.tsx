@@ -7,6 +7,7 @@ import { AlbumState } from "./album/album.reducer";
 import DatePicker from "./DatePicker";
 import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
+import { ReactNativeFile } from "apollo-upload-client";
 
 interface CreateNewAlbumProps {
   state: AlbumState;
@@ -25,10 +26,10 @@ const CreateNewAlbum = ({
 }: CreateNewAlbumProps) => {
   const [dateOpen, setDateOpen] = useState(false);
   const styles = useStyles();
+  const [coverURI, setCoverURI] = useState<string>("");
 
   let openImagePickerAsync = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       alert("Permission to access camera roll is required!");
@@ -37,9 +38,34 @@ const CreateNewAlbum = ({
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
     console.log(pickerResult);
-    if (!pickerResult.cancelled) dispatch(setCoverImage(pickerResult.uri));
+    if (!pickerResult.cancelled) {
+      const blob = RegExp(/^data:image\/[A-Za-z]*;base64,/).test(
+        pickerResult.uri
+      );
+      let file: File | ReactNativeFile;
+      if (blob) {
+        const blob = await fetch(pickerResult.uri).then((res) => res.blob());
+        file = new File(
+          [blob],
+          "a." +
+            pickerResult.uri.substring(11, pickerResult.uri.indexOf(";base64,"))
+        );
+        setCoverURI(URL.createObjectURL(blob));
+      } else {
+        const type = pickerResult.uri.substring(
+          pickerResult.uri.lastIndexOf(".") + 1
+        );
+        file = new ReactNativeFile({
+          uri: pickerResult.uri,
+          name: "a" + type,
+          type: "image/" + type,
+        });
+        setCoverURI(pickerResult.uri);
+      }
+      console.log(file);
+      dispatch(setCoverImage(file));
+    }
   };
-
   return (
     <View>
       <View>
@@ -61,7 +87,7 @@ const CreateNewAlbum = ({
       {/* Release date. Sets song release date after being chosen*/}
       <View style={[styles.inputSection]}>
         <DatePicker
-          value={state.releaseDate ?? new Date()}
+          value={state.releaseDate ?? null}
           onChange={(date: Date) => {
             dispatch(setReleaseDate(date));
             setDateCallback(date);
@@ -74,44 +100,13 @@ const CreateNewAlbum = ({
         <Button onPress={openImagePickerAsync}>Last opp coverbilde</Button>
         {state.coverImage && (
           <Image
-            source={{ uri: state.coverImage }}
-            style={{ width: 300, height: 300, resizeMode: "contain" }}
+            source={{
+              uri: coverURI,
+            }}
+            style={{ width: 300, height: 300, resizeMode: "cover" }}
           />
         )}
       </View>
-      {/*       <input
-        required
-        accept="image/*"
-        style={{
-          width: "1px",
-          height: "1px",
-          opacity: 0,
-          display: "block",
-          marginLeft: "10%",
-          // overflow: "hidden",
-          position: "relative",
-          zIndex: -1,
-        }}
-        id="raised-button-file"
-        type="file"
-        onChange={({
-          target: { validity, files },
-        }: React.ChangeEvent<HTMLInputElement>) => {
-          validity.valid && dispatch(setCoverImage(files?.length && files[0]));
-        }}
-      /> */}
-
-      {/*   <div>
-        {state.coverImage ? (
-          <img
-            src={URL.createObjectURL(state.coverImage)}
-            alt="preview"
-            style={{ maxWidth: "6rem" }}
-          ></img>
-        ) : (
-          <div>Trykk på knappen for å laste opp bilde</div>
-        )}
-      </div> */}
     </View>
   );
 };
