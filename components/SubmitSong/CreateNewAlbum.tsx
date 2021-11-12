@@ -29,15 +29,16 @@ const CreateNewAlbum = ({
   const [coverURI, setCoverURI] = useState<string>("");
 
   let openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted === false) {
+    if (!permissionResult.granted) {
       alert("Permission to access camera roll is required!");
       return;
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log(pickerResult);
+
     if (!pickerResult.cancelled) {
       const blob = RegExp(/^data:image\/[A-Za-z]*;base64,/).test(
         pickerResult.uri
@@ -55,10 +56,13 @@ const CreateNewAlbum = ({
         const type = pickerResult.uri.substring(
           pickerResult.uri.lastIndexOf(".") + 1
         );
+        console.log(type);
+
+        const uri = pickerResult.uri;
         file = new ReactNativeFile({
-          uri: pickerResult.uri,
-          name: "a" + type,
+          uri,
           type: "image/" + type,
+          name: "cover-image." + type,
         });
         setCoverURI(pickerResult.uri);
       }
@@ -66,6 +70,7 @@ const CreateNewAlbum = ({
       dispatch(setCoverImage(file));
     }
   };
+
   return (
     <View>
       <View>

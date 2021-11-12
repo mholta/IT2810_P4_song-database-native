@@ -51,10 +51,8 @@ export default function SubmitSong() {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [
-    createNewAlbumModalOpen,
-    setCreateNewAlbumModalOpen,
-  ] = useState<boolean>(false);
+  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
+    useState<boolean>(false);
   // const client = useApolloClient();
   useEffect(() => {
     setArtistId(songState.mainArtistId);
@@ -97,9 +95,11 @@ export default function SubmitSong() {
           file: albumState.coverImage,
           albumReleaseDate: albumState.releaseDate,
         },
-      });
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
-    setSend(false);
+    return () => setSend(false);
   }, [send]);
   const handleSubmit = (e: any) => {
     console.log({
