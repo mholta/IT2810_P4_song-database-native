@@ -7,7 +7,6 @@ import { SongListItem } from "../components/SongListItem";
 import { View } from "../components/Themed";
 import { RootState } from "../redux";
 import { SortOptions } from "../redux/filter/filter.types";
-
 interface SongListProps {
   navigation: any;
 }
@@ -22,7 +21,6 @@ export const SongList = ({ navigation }: SongListProps) => {
   const sortOptions: SortOptions | null = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
-
   const options = {
     variables: {
       searchString: searchString,
@@ -32,7 +30,7 @@ export const SongList = ({ navigation }: SongListProps) => {
     },
   };
 
-  const { data, refetch, fetchMore } = useQuery(GET_SEARCH_RESULTS, {
+  const { data, previousData, fetchMore } = useQuery(GET_SEARCH_RESULTS, {
     ...options,
     variables: {
       ...options?.variables,
@@ -40,12 +38,6 @@ export const SongList = ({ navigation }: SongListProps) => {
       page: 1,
     },
   });
-
-  useEffect(() => {
-    refetch(options.variables);
-    setLoadedPageNum(1);
-  }, [searchString, sortOptions, selectedThemes.length]);
-
   const [loadedPageNum, setLoadedPageNum] = React.useState<number>(1);
 
   const loadNextPage = () => {
@@ -70,7 +62,7 @@ export const SongList = ({ navigation }: SongListProps) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data?.songs?.songs ?? []}
+        data={data?.songs?.songs ?? previousData?.songs?.songs ?? []}
         renderItem={renderItem}
         style={styles.listView}
         keyExtractor={(item) => item._id}

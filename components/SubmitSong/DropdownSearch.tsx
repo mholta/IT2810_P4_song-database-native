@@ -46,26 +46,13 @@ const DropdownSearch = ({
   labelPreposition,
   noOptionsComponent,
 }: DropdownSearchProps) => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [previousInputValue, setPreviousInputValue] = useState<string>(" ");
   const [modalVisible, setModalVisible] = useState(false);
   const [chosen, setChosen] = useState("");
   const [previousDataLength, setPreviousDataLength] = useState<number>(0);
-  const { data, loading, error, refetch, fetchMore } = useQuery(query, {
-    variables: variables,
+  const [variable, setVariable] = useState(variables);
+  const { data, previousData, loading, error, fetchMore } = useQuery(query, {
+    variables: variable,
   });
-  useEffect(() => {
-    if (previousInputValue !== inputValue) {
-      (async () => {
-        setPreviousInputValue(inputValue);
-        const variables: Variables = { [searchKey]: inputValue };
-        refetch(variables);
-      })();
-    }
-    if (inputValue === "") {
-      setPreviousInputValue("");
-    }
-  }, [loading, inputValue]);
 
   const loadMore = () => {
     if (
@@ -139,19 +126,21 @@ const DropdownSearch = ({
                 autoCorrect={false}
                 // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
                 onChangeText={(newInputValue: string) => {
-                  setInputValue(newInputValue);
+                  setVariable({ ...variable, [searchKey]: newInputValue });
                 }}
                 round={false}
                 // lightTheme={true}
                 onFocus={openModal}
                 onBlur={openModal}
                 clearButtonMode={"always"}
-                value={inputValue}
+                value={variable[searchKey] ?? ""}
                 //@ts-ignore probably same error as above. & is used insted of | https://github.com/react-native-elements/react-native-elements/issues/3089
                 searchIcon={null}
               />
             }
-            data={data ? data[dataKey] : []}
+            data={
+              data ? data[dataKey] : previousData ? previousData[dataKey] : []
+            }
             keyExtractor={(_, index) => label + "-" + index}
             renderItem={renderItem}
             ItemSeparatorComponent={seperator}

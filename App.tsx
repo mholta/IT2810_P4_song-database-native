@@ -9,7 +9,7 @@ import Navigation from "./navigation";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
+import { faGlasses, faSlidersH } from "@fortawesome/free-solid-svg-icons";
 import StaticContent from "./hooks/StaticContent";
 import { ThemeProvider } from "react-native-elements";
 import { theme } from "./styles/theme";
@@ -21,7 +21,7 @@ const client = new ApolloClient({
       Query: {
         fields: {
           songs: {
-            keyArgs: false,
+            keyArgs: ["searchString", "filter", "sorting"],
             merge(existing, incoming) {
               if (!incoming) return existing;
               if (!existing) return incoming;
@@ -32,7 +32,7 @@ const client = new ApolloClient({
             },
           },
           artists: {
-            keyArgs: false,
+            keyArgs: ["name"],
             merge(existing, incoming) {
               if (!incoming) return existing;
               if (!existing) return incoming;
@@ -40,7 +40,7 @@ const client = new ApolloClient({
             },
           },
           albums: {
-            keyArgs: false,
+            keyArgs: ["title"],
             merge(existing, incoming) {
               if (!incoming) return existing;
               if (!existing) return incoming;
