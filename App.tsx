@@ -81,6 +81,7 @@ export default function App() {
                   colors: {
                     ...DefaultTheme.colors,
                     primary: theme.colors?.primary ?? "white",
+                    text: theme.colors?.text ?? "white",
                   },
                 }}
               >

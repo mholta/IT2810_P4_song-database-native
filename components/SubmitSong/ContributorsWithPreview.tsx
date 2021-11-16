@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { TextInput, Chip, HelperText } from "react-native-paper";
+import { useTheme } from "react-native-elements";
+import { Chip, HelperText } from "react-native-paper";
+import { TextInput } from "../generic/TextInput";
 
 interface ContributorsWithPreviewProps {
   onChangeText: (e: string) => void;
@@ -25,6 +27,7 @@ const ContributorsWithPreview = ({
   helperText,
   placeholder,
 }: ContributorsWithPreviewProps) => {
+  const { theme } = useTheme();
   return (
     <View>
       <TextInput
@@ -39,7 +42,12 @@ const ContributorsWithPreview = ({
         {valueList
           .filter((s) => s.trim())
           .map((string, i) => (
-            <Chip key={label + "-contrib-" + i}>{string}</Chip>
+            <Chip
+              key={label + "-contrib-" + i}
+              style={{ backgroundColor: theme.colors?.box }}
+            >
+              {string}
+            </Chip>
           ))}
       </View>
     </View>

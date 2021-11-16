@@ -18,6 +18,7 @@ declare module "react-native-elements" {
   export interface Colors {
     box: string;
     text: string;
+    textFaded: string;
     background: string;
   }
 
@@ -33,6 +34,7 @@ const mainTheme: Theme = {
     primary: "#d8a200",
     box: "black",
     text: "black",
+    textFaded: "#333",
     background: "#fff",
   },
   layout: {
@@ -64,6 +66,7 @@ const lightThemeColors: Theme = {
     black: "#000",
     box: "#ddd",
     text: "#060606",
+    textFaded: "#333",
     background: "#fff",
   },
 };
@@ -79,6 +82,7 @@ const darkThemeColors: Theme = {
     black: "#fff",
     box: "#222",
     text: "#eaeaea",
+    textFaded: "#aaa",
     background: "#040404",
   },
 };

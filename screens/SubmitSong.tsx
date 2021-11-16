@@ -23,7 +23,6 @@ import {
 } from "../components/SubmitSong/song/song.actions";
 import AlbumSearch from "../components/SubmitSong/AlbumSearch";
 import DatePicker from "../components/SubmitSong/DatePicker";
-import { TextInput } from "react-native-paper";
 import {
   ERROR_ALBUM,
   ERROR_KEY,
@@ -40,6 +39,7 @@ import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
 import { formatKey, formatTime } from "../utils/inputChecks";
 import { useMutation, gql } from "@apollo/client";
 import ScrollContainer from "../components/generic/ScreenWrapper";
+import { TextInput } from "../components/generic/TextInput";
 
 const SubmitSong = () => {
   const [songState, songDispatch] = useReducer(songReducer, initialSongState);
@@ -222,7 +222,6 @@ const SubmitSong = () => {
         onChangeText={(text) => songDispatch(setTime(text))}
         error={inputError === ERROR_TIME}
         value={songState.time}
-        theme={{ colors: { text: "red" } }}
       />
 
       {/* Contributors */}
@@ -320,10 +319,7 @@ const useStyles = makeStyles((theme) => ({
     height: 1,
     width: "80%",
   },
-  inputSection: {
-    marginVertical: theme.layout?.space?.small,
-    backgroundColor: theme.colors?.grey3,
-  },
+  inputSection: {},
 }));
 
 export default SubmitSong;

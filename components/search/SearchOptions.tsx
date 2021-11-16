@@ -1,19 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
 import { ScrollView, View, TouchableOpacity } from "react-native";
-import { Button, makeStyles } from "react-native-elements";
+import { makeStyles } from "react-native-elements";
 import RNModal from "react-native-modal";
 import { useSelector } from "react-redux";
 import useColorScheme from "../../hooks/useColorScheme";
 import { RootState } from "../../redux";
 import { toggleThemeSelection } from "../../redux/filter/filter.actions";
 import { Box } from "../generic/Box";
-import { IconButton } from "../IconButton";
 import Categories from "./Categories";
 import SortSelect from "./SortSelect";
 
 const SearchOptions = () => {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 

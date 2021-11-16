@@ -45,7 +45,7 @@ const SearchInput = () => {
       containerStyle={styles.container}
       inputContainerStyle={styles.inputContainer}
       inputStyle={styles.input}
-      placeholderTextColor={theme.colors?.grey4}
+      placeholderTextColor={theme.colors?.textFaded}
     />
   );
 };
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   inputContainer: {
     backgroundColor: theme.colors?.grey2,
   },
-  input: {},
+  input: { color: theme.colors?.text },
   textInput: {},
 }));
 
