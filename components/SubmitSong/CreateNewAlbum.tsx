@@ -15,6 +15,7 @@ interface CreateNewAlbumProps {
   setCreateNewAlbumModalOpen: React.Dispatch<boolean>;
   setDateCallback: (date: Date | null) => void;
   setDateAlbumError: React.Dispatch<boolean>;
+  onDateErrorChange: (error: boolean) => void;
 }
 
 const CreateNewAlbum = ({
@@ -23,6 +24,7 @@ const CreateNewAlbum = ({
   setCreateNewAlbumModalOpen,
   setDateCallback,
   setDateAlbumError,
+  onDateErrorChange,
 }: CreateNewAlbumProps) => {
   const [dateOpen, setDateOpen] = useState(false);
   const styles = useStyles();
@@ -92,11 +94,13 @@ const CreateNewAlbum = ({
       {/* Release date. Sets song release date after being chosen*/}
       <View style={[styles.inputSection]}>
         <DatePicker
-          value={state.releaseDate ?? null}
+          value={state.releaseDate}
+          label="Utgivelsesdato album"
           onChange={(date: Date) => {
             dispatch(setReleaseDate(date));
             setDateCallback(date);
           }}
+          onDateErrorChange={onDateErrorChange}
         />
       </View>
 

@@ -3,19 +3,19 @@ import {
   SET_MAIN_ARTIST,
   SET_RELEASE_DATE,
   SET_COVER_IMAGE,
-} from './album.actionTypes';
+} from "./album.actionTypes";
 
 export interface AlbumState {
   title: string;
-  releaseDate: Date | null;
+  releaseDate: Date;
   mainArtistId: string; // id of main artist
   coverImage: any;
 }
 
 export const initialAlbumState: AlbumState = {
-  title: '',
-  releaseDate: null,
-  mainArtistId: '',
+  title: "",
+  releaseDate: new Date(),
+  mainArtistId: "",
   coverImage: undefined,
 };
 

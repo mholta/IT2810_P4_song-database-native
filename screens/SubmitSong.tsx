@@ -40,7 +40,7 @@ import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
 import { formatKey, formatTime } from "../utils/inputChecks";
 import { useMutation, gql } from "@apollo/client";
 
-export default function SubmitSong() {
+const SubmitSong = () => {
   const [songState, songDispatch] = useReducer(songReducer, initialSongState);
   const [albumState, albumDispatch] = useReducer(
     albumReducer,
@@ -122,8 +122,6 @@ export default function SubmitSong() {
     try {
       if (songState.key) songDispatch(setKey(formatKey(songState.key)));
       if (songState.time) songDispatch(setTime(formatTime(songState.time)));
-      if (createNewAlbumModalOpen && !albumState.releaseDate)
-        throw Error(ERROR_RELEASE_DATE_ALBUM);
       if (!songState.releaseDate) throw Error(ERROR_RELEASE_DATE);
       if (dateError) throw Error(ERROR_RELEASE_DATE);
       if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
@@ -171,6 +169,7 @@ export default function SubmitSong() {
             }
           }}
           setCreateNewAlbumModalOpen={setCreateNewAlbumModalOpen}
+          onDateErrorChange={setDateAlbumError}
         />
       )}
 
@@ -185,10 +184,14 @@ export default function SubmitSong() {
 
       {/* Release date. Equal to album release date when choosing album */}
       <View style={styles.inputSection}>
-        <DatePicker
-          value={songState.releaseDate ?? songState.releaseDate ?? new Date()}
-          onChange={(date: Date) => songDispatch(setSongReleaseDate(date))}
-        />
+        {songState.releaseDate && (
+          <DatePicker
+            value={songState.releaseDate}
+            label="Utgivelsesdato sang"
+            onChange={(date: Date) => songDispatch(setSongReleaseDate(date))}
+            onDateErrorChange={setDateError}
+          />
+        )}
       </View>
 
       {/* Key */}
@@ -260,14 +263,10 @@ export default function SubmitSong() {
         />
       </View>
       <Button title="Send inn" onPress={handleSubmit} />
-      <View
-        style={styles.separator}
-        // lightColor="#eee"
-        // darkColor="rgba(255,255,255,0.1)"
-      />
+      <View style={styles.separator} />
     </ScrollView>
   );
-}
+};
 
 const CREATE_SONG_MUTATION = gql`
   mutation CreateSong(
@@ -329,3 +328,5 @@ const useStyles = makeStyles((theme) => ({
     marginVertical: theme.layout?.space?.small,
   },
 }));
+
+export default SubmitSong;

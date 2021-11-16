@@ -5,29 +5,30 @@ import NativeDatePicker from "@react-native-community/datetimepicker";
 import { DatePickerProps } from "./DatePicker";
 
 const DatePicker = ({ onChange, value }: DatePickerProps) => {
-  const [show, setShow] = useState(false);
-  if (Platform.OS !== "web") {
-    return (
-      <View>
+  const isIos = Platform.OS === "ios";
+
+  const [show, setShow] = useState(isIos);
+
+  return (
+    <View>
+      {!isIos && (
         <Button
           onPress={() => setShow(true)}
           title={value?.toLocaleDateString() ?? "Velg utgivelsesdato"}
         />
-        {show && (
-          <NativeDatePicker
-            accessibilityLabel="Choose date"
-            value={value ?? new Date()}
-            onChange={(_: any, selectedDate?: Date) => {
-              setShow(Platform.OS === "ios");
-              selectedDate && onChange(selectedDate);
-            }}
-            mode="date"
-          />
-        )}
-      </View>
-    );
-  }
-
-  return <></>;
+      )}
+      {show && (
+        <NativeDatePicker
+          accessibilityLabel="Choose date"
+          value={value}
+          onChange={(_: any, selectedDate?: Date) => {
+            setShow(isIos);
+            selectedDate && onChange(selectedDate);
+          }}
+          mode="date"
+        />
+      )}
+    </View>
+  );
 };
 export default DatePicker;

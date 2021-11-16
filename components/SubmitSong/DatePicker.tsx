@@ -1,26 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SongState } from "./song/song.reducer";
-import TextInputMask from "react-native-text-input-mask";
 
 export interface DatePickerProps {
-  value: Date | null;
+  value: Date;
+  label: string;
   onChange: React.Dispatch<any>;
+  onDateErrorChange: (error: boolean) => void;
 }
 
-const DatePicker = ({ value, onChange }: DatePickerProps) => {
-  if (value === null) {
-    onChange(new Date());
-  }
+const DatePicker = ({
+  value,
+  label,
+  onChange,
+  onDateErrorChange,
+}: DatePickerProps) => {
+  const [inputText, setInputText] = useState<string>(
+    value.toLocaleDateString()
+  );
+  const [inputError, setInputError] = useState<boolean>(false);
+
   return (
-    <Text
-    // render={(props) => (
-    //   <TextInputMask {...props} mask="+[00] [000] [000] [000]" />
-    // )}
-    >
-      {value?.toLocaleDateString()}
-    </Text>
+    <TextInput
+      value={inputText}
+      error={inputError}
+      label={label + " (DD/MM/YYYY)"}
+      placeholder="DD/MM/YYYY"
+      onChangeText={(newVal) => {
+        setInputText(newVal);
+
+        try {
+          const [day, month, year] = newVal.split("/").map((s) => parseInt(s));
+          if (!year || year < 1200)
+            throw new Error("Year should be after 1200");
+          const date = new Date(year, month - 1, day);
+
+          onChange(date);
+          setInputError(false);
+          onDateErrorChange(false);
+        } catch (e) {
+          setInputError(true);
+          onDateErrorChange(true);
+        }
+      }}
+    />
   );
 };
 export default DatePicker;

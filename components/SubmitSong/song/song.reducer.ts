@@ -13,8 +13,8 @@ import {
   SET_SPOTIFY_LINK,
   SET_MAIN_ARTIST,
   SET_RELEASE_DATE,
-} from './song.actionTypes';
-import { FilterCategory } from '../../../api/types';
+} from "./song.actionTypes";
+import { FilterCategory } from "../../../api/types";
 
 export interface SongState {
   title: string;
@@ -37,23 +37,23 @@ export interface SongState {
 }
 
 export const initialSongState: SongState = {
-  title: '',
-  albumId: '',
-  key: '',
+  title: "",
+  albumId: "",
+  key: "",
   releaseDate: null,
-  mainArtistId: '',
+  mainArtistId: "",
   artists: [],
   themes: [],
   contributorsList: [],
-  contributorsString: '',
+  contributorsString: "",
   producersList: [],
-  producersString: '',
+  producersString: "",
   writersList: [],
-  writersString: '',
-  tempo: '',
-  time: '',
-  appleMusicLink: '',
-  spotifyLink: '',
+  writersString: "",
+  tempo: "",
+  time: "",
+  appleMusicLink: "",
+  spotifyLink: "",
 };
 
 const CONTRIBUTOR_SPLIT_REGEX: RegExp = /,|\n/gi;
