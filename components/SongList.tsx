@@ -24,7 +24,7 @@ export const SongList = ({ navigation }: SongListProps) => {
   const options = {
     variables: {
       searchString: searchString,
-      themes: selectedThemes,
+      themes: selectedThemes.sort(),
       contributor: undefined,
       sortOptions: sortOptions,
     },
