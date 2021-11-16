@@ -5,7 +5,7 @@ import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
 import { setSearchString } from "../../redux/filter/filter.actions";
 import { SortOptions } from "../../redux/filter/filter.reducer";
-import { SortOrder, SortType } from "./SortSelect";
+import { SortOrder, SortType } from "./SearchSorting";
 
 const SearchInput = () => {
   const searchString = useSelector(
@@ -13,9 +13,8 @@ const SearchInput = () => {
   );
   const dispatch = useDispatch();
 
-  const [localSearchString, setLocalSearchString] = useState<string>(
-    searchString
-  );
+  const [localSearchString, setLocalSearchString] =
+    useState<string>(searchString);
 
   const triggerSearch = () => {
     dispatch(setSearchString(localSearchString));

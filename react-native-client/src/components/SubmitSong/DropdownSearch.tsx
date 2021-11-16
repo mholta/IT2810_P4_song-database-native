@@ -105,7 +105,7 @@ const DropdownSearch = ({
         type="outline"
         title={
           chosen === ""
-            ? `Velg ${labelPreposition} ${label}`
+            ? `Velg ${labelPreposition} ${label} *`
             : `${label.replace(/^\w/, (match) =>
                 match.toUpperCase()
               )}: ${chosen}`

@@ -4,6 +4,7 @@ import SearchFilterWrapper from "../components/search/SearchFilterWrapper";
 import { SongList } from "../components/SongList";
 import { Text, View } from "react-native";
 import { RootTabScreenProps } from "../types";
+import SearchSorting from "../components/search/SearchSorting";
 
 const SongsScreen = ({ navigation }: RootTabScreenProps<"SongsTab">) => {
   const styles = useStyles();
@@ -12,6 +13,7 @@ const SongsScreen = ({ navigation }: RootTabScreenProps<"SongsTab">) => {
     <View style={styles.container}>
       <SearchFilterWrapper />
       <SongList navigation={navigation} />
+      <SearchSorting />
     </View>
   );
 };

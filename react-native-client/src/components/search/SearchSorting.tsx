@@ -1,14 +1,17 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { makeStyles } from "react-native-elements";
+import { Picker } from "@react-native-picker/picker";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, makeStyles, useTheme } from "react-native-elements";
+import { Animated, TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
 import { SortOptions } from "../../redux/filter/filter.reducer";
-import { H2 } from "../generic/Text";
-import SortSelectButton from "./SortSelectButton";
 
-const SortSelect = () => {
+interface SearchSortingProps {}
+
+const SearchSorting = ({}: SearchSortingProps) => {
+  const styles = useStyles();
+  const { theme } = useTheme();
   const sortOptionsRedux: SortOptions = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
@@ -32,37 +35,114 @@ const SortSelect = () => {
     ? [relevanceSortOption, ...sortOptions]
     : [...sortOptions];
 
-  const styles = useStyles();
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      duration: 5000,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    // Will change fadeAnim value to 0 in 3 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      duration: 300,
+    }).start();
+  };
+
+  useEffect(() => {
+    if (isOpen) fadeIn();
+    else fadeOut();
+  }, [isOpen]);
 
   return (
-    <View>
-      <H2>Sorter på {currentSortOptionString}</H2>
-      <View style={styles.listWrapper}>
-        {options.map((option: SortOptionWithDisplayName, i) => (
-          <SortSelectButton
-            key={"sort-option-" + i}
-            title={option.displayName}
-            value={sortOptionObjectToString(option)}
-            selected={sortOptionIsEqual(option, sortOptionsRedux)}
-            onPress={() =>
+    <View style={[styles.container, { height: isOpen ? "100%" : "auto" }]}>
+      {/* Backdrop */}
+      <TouchableWithoutFeedback
+        style={[styles.backdrop, { display: isOpen ? "flex" : "none" }]}
+        onPress={() => setIsOpen(false)}
+      >
+        <View style={styles.backdrop}></View>
+      </TouchableWithoutFeedback>
+
+      {/* Picker */}
+      {isOpen && (
+        <View style={styles.modal}>
+          <Picker
+            selectedValue={sortOptionObjectToString(sortOptionsRedux)}
+            onValueChange={(itemValue: string) => {
               dispatch(
-                setSortOptions(
-                  sortOptionsWithDisplayNameToPlainSortOptions(option)
-                )
-              )
-            }
-          />
-        ))}
+                setSortOptions(typeAndOrderFromSortOptionString(itemValue))
+              );
+            }}
+          >
+            {options.map((option: SortOptionWithDisplayName, i) => (
+              <Picker.Item
+                key={"sort-option-" + i}
+                label={option.displayName}
+                color={theme.colors?.text}
+                value={sortOptionObjectToString(option)}
+              />
+            ))}
+          </Picker>
+        </View>
+      )}
+
+      {/* Bottom button */}
+      <View
+        style={[
+          styles.bottomContainer,
+          {
+            backgroundColor: isOpen ? "rgba(20,20,20,1)" : "rgba(20,20,20,0.9)",
+          },
+        ]}
+      >
+        <Button
+          type="clear"
+          onPress={() => setIsOpen(!isOpen)}
+          title={isOpen ? "Lukk" : "Sorterer på " + currentSortOptionString}
+          style={{
+            alignItems: "flex-end",
+          }}
+        />
       </View>
     </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  listWrapper: {},
+  container: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  bottomContainer: {
+    bottom: 0,
+    left: 0,
+    height: 60,
+    width: "100%",
+    backgroundColor: "rgba(20,20,20,0.9)",
+    padding: theme.layout?.padding?.screen,
+  },
+  modal: {
+    backgroundColor: "rgba(20,20,20,1)",
+  },
+  backdrop: {
+    flexGrow: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
 }));
-
-export default SortSelect;
 
 export enum SortType {
   RELEASE_DATE = "releaseDate",
@@ -164,3 +244,5 @@ const sortOptions: SortOptionWithDisplayName[] = [
     order: SortOrder.DESC,
   },
 ];
+
+export default SearchSorting;

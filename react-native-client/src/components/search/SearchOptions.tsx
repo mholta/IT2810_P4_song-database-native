@@ -9,7 +9,6 @@ import { RootState } from "../../redux";
 import { toggleThemeSelection } from "../../redux/filter/filter.actions";
 import { Box } from "../generic/Box";
 import Categories from "./Categories";
-import SortSelect from "./SortSelect";
 
 const SearchOptions = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
@@ -51,7 +50,6 @@ const SearchOptions = () => {
                 color={colorScheme === "dark" ? "#ddd" : "#111"}
               />
             </TouchableOpacity>
-            <SortSelect />
             <View>
               <Categories
                 title="Tema"
