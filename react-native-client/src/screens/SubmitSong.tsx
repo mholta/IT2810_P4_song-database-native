@@ -17,6 +17,7 @@ import {
   setProducersString,
   setReleaseDate as setSongReleaseDate,
   setTempo,
+  setThemes,
   setTime,
   setTitle,
   setWritersString,
@@ -40,6 +41,8 @@ import { formatKey, formatTime } from "../utils/inputChecks";
 import { useMutation, gql } from "@apollo/client";
 import ScrollContainer from "../components/generic/ScreenWrapper";
 import { TextInput } from "../components/generic/TextInput";
+import { CategoriesSelector } from "../components/SubmitSong/CategoriesSelector";
+import { FilterCategory } from "../redux/filter/filter.reducer";
 
 const SubmitSong = () => {
   const [songState, songDispatch] = useReducer(songReducer, initialSongState);
@@ -193,6 +196,13 @@ const SubmitSong = () => {
           />
         )}
       </View>
+
+      {/* Categories */}
+      <CategoriesSelector
+        onChangeSelection={(categories: FilterCategory[]) => {
+          songDispatch(setThemes(categories));
+        }}
+      />
 
       {/* Key */}
       <TextInput
