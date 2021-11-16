@@ -13,8 +13,9 @@ const SearchInput = () => {
   );
   const dispatch = useDispatch();
 
-  const [localSearchString, setLocalSearchString] =
-    useState<string>(searchString);
+  const [localSearchString, setLocalSearchString] = useState<string>(
+    searchString
+  );
 
   const triggerSearch = () => {
     dispatch(setSearchString(localSearchString));
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     borderTopColor: "transparent",
   },
   inputContainer: {
-    backgroundColor: theme.colors?.grey2,
+    backgroundColor: theme.colors?.background,
   },
   input: { color: theme.colors?.text },
   textInput: {},

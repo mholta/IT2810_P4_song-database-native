@@ -47,7 +47,7 @@ const Categories = ({
                 {
                   backgroundColor: isSelected
                     ? theme.colors?.primary
-                    : theme.colors?.white,
+                    : theme.colors?.background,
                 },
               ]}
             >

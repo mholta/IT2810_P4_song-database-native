@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, DocumentNode } from "@apollo/client";
 import { Text, FlatList, View, StyleSheet, ListRenderItem } from "react-native";
 import Modal from "react-native-modal";
-import { SearchBar, Button } from "react-native-elements";
+import { SearchBar, Button, makeStyles, useTheme } from "react-native-elements";
 
 type SearchKey = "name" | "title";
 
@@ -46,6 +46,9 @@ const DropdownSearch = ({
   labelPreposition,
   noOptionsComponent,
 }: DropdownSearchProps) => {
+  const styles = useStyles();
+  const { theme } = useTheme();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [chosen, setChosen] = useState("");
   const [previousDataLength, setPreviousDataLength] = useState<number>(0);
@@ -123,6 +126,10 @@ const DropdownSearch = ({
               <SearchBar
                 placeholder={`Søk etter ${labelPreposition} ${label}`}
                 style={styles.input}
+                containerStyle={styles.searchContainer}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                placeholderTextColor={theme.colors?.textFaded}
                 autoCorrect={false}
                 // @ts-ignore onChangeText-types for searchbar is currently broken https://github.com/react-native-elements/react-native-elements/issues/3089
                 onChangeText={(newInputValue: string) => {
@@ -153,18 +160,9 @@ const DropdownSearch = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    height: 20,
-    padding: 12,
-  },
-  item: {
-    margin: 20,
-  },
-  seperator: {
-    height: 1,
-    backgroundColor: "white",
+const useStyles = makeStyles((theme) => ({
+  searchContainer: {
+    backgroundColor: theme.colors?.grey3,
   },
   container: {
     flex: 1,
@@ -175,7 +173,24 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     // padding: "1px",
     borderRadius: 10,
-    backgroundColor: "black",
+    backgroundColor: theme.colors?.background,
   },
-});
+  inputContainer: {
+    backgroundColor: theme.colors?.background,
+  },
+  input: {
+    height: 20,
+    padding: 12,
+    color: theme.colors?.text,
+    // backgroundColor: theme.colors?.background,
+  },
+  item: {
+    margin: 20,
+  },
+  seperator: {
+    height: 1,
+    backgroundColor: theme.colors?.text,
+  },
+}));
+
 export default DropdownSearch;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput } from "../generic/TextInput";
 import { SongState } from "./song/song.reducer";
 
 export interface DatePickerProps {

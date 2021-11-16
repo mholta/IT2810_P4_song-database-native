@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Image, Text, View } from "react-native";
 import { makeStyles } from "react-native-elements";
-import { IconButton, TextInput } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { setCoverImage, setReleaseDate, setTitle } from "./album/album.actions";
 import { AlbumState } from "./album/album.reducer";
 import DatePicker from "./DatePicker";
 import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { ReactNativeFile } from "apollo-upload-client";
+import { TextInput } from "../generic/TextInput";
 
 interface CreateNewAlbumProps {
   state: AlbumState;
@@ -31,8 +32,7 @@ const CreateNewAlbum = ({
   const [coverURI, setCoverURI] = useState<string>("");
 
   let openImagePickerAsync = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
       alert("Permission to access camera roll is required!");
