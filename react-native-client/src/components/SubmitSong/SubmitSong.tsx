@@ -29,6 +29,7 @@ import {
   ERROR_NETWORK,
   ERROR_RELEASE_DATE,
   ERROR_RELEASE_DATE_ALBUM,
+  ERROR_TEMPO,
   ERROR_TIME,
   ERROR_TITLE,
   ERROR_TITLE_NO_INPUT,
@@ -62,8 +63,10 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
-    useState<boolean>(false);
+  const [
+    createNewAlbumModalOpen,
+    setCreateNewAlbumModalOpen,
+  ] = useState<boolean>(false);
   const client = useApolloClient();
 
   useEffect(() => {
@@ -144,10 +147,12 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
       if (createNewAlbumModalOpen && !albumState.coverImage)
         throw Error(ERROR_IMAGE);
       if (!songState.title) throw Error(ERROR_TITLE_NO_INPUT);
+      if (!songState.releaseDate) throw Error(ERROR_RELEASE_DATE);
       if (songState.key) songDispatch(setKey(formatKey(songState.key)));
       else throw Error(ERROR_KEY);
+      if (songState.tempo && isNaN(parseInt(songState.tempo)))
+        throw Error(ERROR_TEMPO);
       if (songState.time) songDispatch(setTime(formatTime(songState.time)));
-      if (!songState.releaseDate) throw Error(ERROR_RELEASE_DATE);
       if (dateError) throw Error(ERROR_RELEASE_DATE);
       if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
       setSend(true);
@@ -273,6 +278,9 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         value={songState.tempo}
         keyboardType="numeric"
       />
+      {inputError === ERROR_TEMPO && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
 
       {/* Time */}
       <TextInput
@@ -283,6 +291,9 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         error={inputError === ERROR_TIME}
         value={songState.time}
       />
+      {inputError === ERROR_TIME && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
 
       {/* Contributors */}
       <View style={styles.inputSection}>

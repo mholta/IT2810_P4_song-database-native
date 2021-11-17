@@ -11,6 +11,7 @@ export const ERROR_TITLE_NO_INPUT = "ERROR_TITLE_NO_INPUT";
 export const ERROR_ALBUM_NO_INPUT = "ERROR_ALBUM_NO_INPUT";
 export const ERROR_ALBUM_TITLE_NO_INPUT = "ERROR_ALBUM_TITLE_NO_INPUT";
 export const ERROR_IMAGE = "ERROR_IMAGE";
+export const ERROR_TEMPO = "ERROR_TEMPO";
 
 export const errorMessage = (error: string): string => {
   switch (error) {
@@ -40,6 +41,8 @@ export const errorMessage = (error: string): string => {
       return "Artist må være satt";
     case ERROR_IMAGE:
       return "Bilde må være valgt";
+    case ERROR_TEMPO:
+      return "Tempo må være et tall";
     default:
       return "Det oppstod en ukjent feil";
   }
