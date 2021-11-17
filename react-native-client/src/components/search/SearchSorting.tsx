@@ -128,10 +128,7 @@ const SearchSorting = ({}: SearchSortingProps) => {
       >
         <Picker
           style={{
-            color:
-              Platform.OS === "web"
-                ? theme.colors?.background
-                : theme.colors?.text,
+            color: Platform.OS === "web" ? "black" : theme.colors?.text,
           }}
         />
       </View>
