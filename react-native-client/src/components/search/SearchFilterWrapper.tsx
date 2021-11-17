@@ -7,7 +7,8 @@ import FilterButton from "./FilterButton";
 
 const SearchFilterWrapper = () => {
   const styles = useStyles();
-  const [dropdownIsOpen, setFilterMenuDropdownIsOpen] = useState<boolean>(true);
+  const [dropdownIsOpen, setFilterMenuDropdownIsOpen] =
+    useState<boolean>(false);
   const openDropdown = () => setFilterMenuDropdownIsOpen(true);
   const closeDropdown = () => setFilterMenuDropdownIsOpen(false);
 

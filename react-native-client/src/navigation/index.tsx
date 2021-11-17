@@ -15,7 +15,7 @@ import InfoScreen from "../screens/InfoScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SongScreen from "../screens/SongScreen";
 import SongsScreen from "../screens/SongsScreen";
-import SubmitSong from "../screens/SubmitSong";
+import SubmitSongScreen from "../screens/SubmitSongScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -102,7 +102,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="SubmitTab"
-        component={SubmitSong}
+        component={SubmitSongScreen}
         options={{
           title: "Send inn en sang",
           tabBarIcon: ({ color }) => <TabBarIcon name="send" color={color} />,

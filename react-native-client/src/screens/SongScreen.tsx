@@ -18,8 +18,6 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
     variables: { id: route.params.songId },
   });
 
-  console.log(data?.song?.album);
-
   const styles = useStyles();
   const { theme } = useTheme();
 

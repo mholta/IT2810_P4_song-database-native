@@ -1,14 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { View } from "react-native";
-import {
-  initialSongState,
-  songReducer,
-} from "../components/SubmitSong/song/song.reducer";
-import {
-  albumReducer,
-  initialAlbumState,
-} from "../components/SubmitSong/album/album.reducer";
-import ArtistSearch from "../components/SubmitSong/ArtistSearch";
+import { initialSongState, songReducer } from "./song/song.reducer";
+import { albumReducer, initialAlbumState } from "./album/album.reducer";
+import ArtistSearch from "./ArtistSearch";
 import {
   setAlbumId,
   setContributorsString,
@@ -21,9 +15,9 @@ import {
   setTime,
   setTitle,
   setWritersString,
-} from "../components/SubmitSong/song/song.actions";
-import AlbumSearch from "../components/SubmitSong/AlbumSearch";
-import DatePicker from "../components/SubmitSong/DatePicker";
+} from "./song/song.actions";
+import AlbumSearch from "./AlbumSearch";
+import DatePicker from "./DatePicker";
 import {
   errorMessage,
   ERROR_ALBUM,
@@ -39,33 +33,38 @@ import {
   ERROR_TITLE,
   ERROR_TITLE_NO_INPUT,
   ERROR_UNKOWN,
-} from "../components/SubmitSong/song/song.error";
-import ContributorsWithPreview from "../components/SubmitSong/ContributorsWithPreview";
+} from "./song/song.error";
+import ContributorsWithPreview from "./ContributorsWithPreview";
 import { Button, makeStyles } from "react-native-elements";
-import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
-import { formatKey, formatTime } from "../utils/inputCheck";
-import { useMutation, gql } from "@apollo/client";
-import ScrollContainer from "../components/generic/ScreenWrapper";
-import { TextInput } from "../components/generic/TextInput";
-import { CategoriesSelector } from "../components/SubmitSong/CategoriesSelector";
-import { FilterCategory } from "../redux/filter/filter.reducer";
+import CreateNewAlbum from "./CreateNewAlbum";
+import { formatKey, formatTime } from "../../utils/inputCheck";
+import { useMutation, gql, useApolloClient } from "@apollo/client";
+import ScrollContainer from "../generic/ScreenWrapper";
+import { TextInput } from "../generic/TextInput";
+import { CategoriesSelector } from "./CategoriesSelector";
+import { FilterCategory } from "../../redux/filter/filter.reducer";
 import { HelperText } from "react-native-paper";
+import { CommonActions } from "@react-navigation/native";
 
-const SubmitSong = () => {
-  const [songState, songDispatch] = useReducer(songReducer, initialSongState);
-  const [albumState, albumDispatch] = useReducer(
-    albumReducer,
-    initialAlbumState
-  );
+interface SubmitSongProps {
+  navigation: any;
+}
+
+const SubmitSong = ({ navigation }: SubmitSongProps) => {
+  const [songState, songDispatch] = useReducer(songReducer, {
+    ...initialSongState,
+  });
+  const [albumState, albumDispatch] = useReducer(albumReducer, {
+    ...initialAlbumState,
+  });
   const [inputError, setInputError] = useState("");
   const [dateError, setDateError] = useState(false);
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [
-    createNewAlbumModalOpen,
-    setCreateNewAlbumModalOpen,
-  ] = useState<boolean>(false);
+  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
+    useState<boolean>(false);
+  const client = useApolloClient();
 
   useEffect(() => {
     setArtistId(songState.mainArtistId);
@@ -108,28 +107,34 @@ const SubmitSong = () => {
           file: albumState.coverImage,
           albumReleaseDate: albumState.releaseDate,
         },
-      });
+      })
+        .then((_) => setSend(false))
+        .catch((_) => setSend(false));
     }
-    return () => setSend(false);
   }, [send]);
+
+  if (data && !loading) {
+    client.clearStore();
+
+    setTimeout(() => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: "Root" },
+            {
+              name: "SongScreen",
+              params: {
+                songId: data.createSong._id,
+              },
+            },
+          ],
+        })
+      );
+    }, 500);
+  }
+
   const handleSubmit = (e: any) => {
-    /*     console.log({
-      album: createNewAlbumModalOpen ? albumState.title : songState.albumId,
-      artists: songState.artists,
-      categories: songState.themes.map((theme) => theme._id),
-      contibutors: songState.contributorsList,
-      iTunes: songState.appleMusicLink,
-      key: songState.key,
-      producers: songState.producersList,
-      releaseDate: songState.releaseDate, // TODO: Implement date picker in song
-      spotify: songState.spotifyLink,
-      tempo: songState.tempo,
-      time: songState.time,
-      title: songState.title,
-      writers: songState.writersList,
-      file: albumState.coverImage,
-      albumReleaseDate: albumState.releaseDate,
-    }); */
     try {
       if (songState.artists.length === 0) throw Error(ERROR_ARTIST);
       if (createNewAlbumModalOpen && !albumState.title)
@@ -147,7 +152,6 @@ const SubmitSong = () => {
       if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
       setSend(true);
     } catch (err) {
-      console.log(err);
       if (err instanceof Error) setInputError(err.message);
       else {
         setInputError(ERROR_UNKOWN);
