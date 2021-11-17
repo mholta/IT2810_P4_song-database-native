@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
+import { customDateString } from "../../utils/customDateString";
 import { TextInput } from "../generic/TextInput";
 import { SongState } from "./song/song.reducer";
 
@@ -16,9 +17,7 @@ const DatePicker = ({
   onChange,
   onDateErrorChange,
 }: DatePickerProps) => {
-  const [inputText, setInputText] = useState<string>(
-    value.toLocaleDateString()
-  );
+  const [inputText, setInputText] = useState<string>(customDateString(value));
   const [inputError, setInputError] = useState<boolean>(false);
 
   return (
