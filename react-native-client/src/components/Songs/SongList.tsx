@@ -2,9 +2,9 @@ import { useQuery, gql } from "@apollo/client";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { SongListItem } from "../components/SongListItem";
-import { RootState } from "../redux";
-import { SortOptions } from "../redux/filter/filter.reducer";
+import { SongListItem } from "./SongList.Item";
+import { RootState } from "../../redux";
+import { SortOptions } from "../../redux/filter/filter.reducer";
 import { makeStyles } from "react-native-elements";
 
 interface SongListProps {

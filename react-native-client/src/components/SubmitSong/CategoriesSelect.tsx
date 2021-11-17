@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { FilterCategory } from "../../redux/filter/filter.reducer";
 
-interface CategoriesSelectorProps {
+interface CategoriesSelectProps {
   onChangeSelection: Function;
 }
 
@@ -20,7 +20,7 @@ interface CategoriesSelectorProps {
  * Button that opens a modal with a list of categories that can be selected.
  * Categories are displayed under the button when selected.
  */
-export const CategoriesSelector = (props: CategoriesSelectorProps) => {
+export const CategoriesSelect = (props: CategoriesSelectProps) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);

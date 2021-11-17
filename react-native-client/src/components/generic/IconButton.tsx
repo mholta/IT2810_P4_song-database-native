@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { makeStyles } from "react-native-elements";
-import { P } from "./generic/Text";
+import { P } from "./Text";
 
 interface IconButtonProps {
   href: string;

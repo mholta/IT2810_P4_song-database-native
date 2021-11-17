@@ -1,9 +1,9 @@
 import React from "react";
 import { Image, Text, View } from "react-native";
 import { makeStyles } from "react-native-elements";
-import { Song } from "../api/types";
-import { Box } from "./generic/Box";
-import { P } from "./generic/Text";
+import { Song } from "../../types/api.types";
+import { Box } from "../generic/Box";
+import { P } from "../generic/Text";
 
 interface SongListItemProps {
   song: Song;

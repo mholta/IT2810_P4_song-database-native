@@ -14,7 +14,7 @@ import {
   SET_MAIN_ARTIST,
   SET_RELEASE_DATE,
 } from "./song.actionTypes";
-import { FilterCategory } from "../../../api/types";
+import { FilterCategory } from "../../../types/api.types";
 
 export interface SongState {
   title: string;

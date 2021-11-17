@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
-import { RootStackScreenProps } from "../types";
+import { RootStackScreenProps } from "../types/navigation.types";
 
 export default function NotFoundScreen({
   navigation,

@@ -19,7 +19,7 @@ import {
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
-} from "../types";
+} from "../types/navigation.types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
 const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => (

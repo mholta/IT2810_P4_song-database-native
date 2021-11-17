@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { View } from "react-native";
 import { initialSongState, songReducer } from "./song/song.reducer";
 import { albumReducer, initialAlbumState } from "./album/album.reducer";
-import ArtistSearch from "./ArtistSearch";
+import ArtistSearch from "./DropdownSearch.Artist";
 import {
   setAlbumId,
   setContributorsString,
@@ -16,7 +16,7 @@ import {
   setTitle,
   setWritersString,
 } from "./song/song.actions";
-import AlbumSearch from "./AlbumSearch";
+import AlbumSearch from "./DropdownSearch.Album";
 import DatePicker from "./DatePicker";
 import {
   errorMessage,
@@ -41,7 +41,7 @@ import { formatKey, formatTime } from "../../utils/inputCheck";
 import { useMutation, gql, useApolloClient } from "@apollo/client";
 import ScrollContainer from "../generic/ScreenWrapper";
 import { TextInput } from "../generic/TextInput";
-import { CategoriesSelector } from "./CategoriesSelector";
+import { CategoriesSelect } from "./CategoriesSelect";
 import { FilterCategory } from "../../redux/filter/filter.reducer";
 import { HelperText } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
@@ -245,7 +245,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
       </View>
 
       {/* Categories */}
-      <CategoriesSelector
+      <CategoriesSelect
         onChangeSelection={(categories: FilterCategory[]) => {
           songDispatch(setThemes(categories));
         }}

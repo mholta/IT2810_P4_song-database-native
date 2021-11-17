@@ -2,7 +2,7 @@ import React from "react";
 import { gql } from "@apollo/client";
 import { Button } from "react-native-elements";
 import DropdownSearch from "./DropdownSearch";
-import { Text, View } from "react-native";
+
 interface AlbumSearch {
   setValueCallback: (value: string) => void;
   setDateCallback: (date: Date | null) => void;

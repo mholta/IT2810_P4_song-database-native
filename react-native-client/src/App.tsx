@@ -10,7 +10,7 @@ import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSlidersH, faTimes } from "@fortawesome/free-solid-svg-icons";
-import StaticContentProvider from "./hooks/StaticContent";
+import StaticContentProvider from "./hooks/StaticContentProvider";
 import { ThemeProvider as RNElementsThemeProvider } from "react-native-elements";
 import {
   DefaultTheme,

@@ -1,4 +1,4 @@
-import { FilterCategory } from '../../../api/types';
+import { FilterCategory } from "../../../types/api.types";
 import {
   SET_TITLE,
   SET_ALBUM_ID,
@@ -14,7 +14,7 @@ import {
   SET_APPLE_MUSIC_LINK,
   SET_MAIN_ARTIST,
   SET_RELEASE_DATE,
-} from './song.actionTypes';
+} from "./song.actionTypes";
 
 export const setTitle = (title: string) => ({
   type: SET_TITLE,

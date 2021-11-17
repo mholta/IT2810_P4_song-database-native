@@ -6,7 +6,7 @@ import { Image, ScrollView, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { Box } from "../components/generic/Box";
 import { P } from "../components/generic/Text";
-import { IconButton } from "../components/IconButton";
+import { IconButton } from "../components/generic/IconButton";
 
 interface SongScreenProps {
   route: any;

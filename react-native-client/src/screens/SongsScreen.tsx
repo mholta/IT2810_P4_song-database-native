@@ -1,9 +1,9 @@
 import React from "react";
 import { makeStyles } from "react-native-elements";
 import SearchFilterWrapper from "../components/search/SearchFilterWrapper";
-import { SongList } from "../components/SongList";
+import { SongList } from "../components/Songs/SongList";
 import { View } from "react-native";
-import { RootTabScreenProps } from "../types";
+import { RootTabScreenProps } from "../types/navigation.types";
 import SearchSorting from "../components/search/SearchSorting";
 
 const SongsScreen = ({ navigation }: RootTabScreenProps<"SongsTab">) => {
