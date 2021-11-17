@@ -21,10 +21,10 @@ react-native-client
 ├───.expo-shared
 ├───assets
 └───src
-    ├───api
     ├───components
     │   ├───generic
     │   ├───search
+    │   ├───Songs
     │   └───SubmitSong
     │       ├───album
     │       └───song
@@ -34,6 +34,7 @@ react-native-client
     │   └───filter
     ├───screens
     ├───styles
+    ├───types
     └───utils
 ```
 
@@ -55,9 +56,13 @@ Det ble gjort noen endringer i backend, som blant annet å legge inn pagination 
 
 I prosjekt 3 hadde bruker mulighet til å opprette et nytt album med bilde. Denne funksjonen var likevel noe skjult, da man kun fikk opp muligheten dersom man ikke fant albumet man søkte etter. For å tydeliggjøre funksjonaliteten og gjøre det enklere og mer logisk for brukeren å kunne opprette et nytt album, så har vi lagt knappen for oppretting av album synlig hele tiden ved velging av album.
 
+### Opplastning av bilde
+
+Når man oppretter et nytt album får man muligheten til å legge til et coverbilde. Denne funksjonaliteten fungerer på Android, i iOS-emulator, men ikke på en iOS enhet. Vi vet ikke hvorfor dette skjer. Serveren mottar ihvertfall bildets filnavn, men det blir av en eller annen grunn ikke lagret.
+
 ### Implementering av to komponenter for DatePicker
 
-Ettersom DatePicker(legg inn til hvilken pakke) kun fungerer på en "native" enhet, har vi opprettet en annen komponent for DatePicker som skal fungere på web. Begge komponentene har samme navn, men filnavnet inneholder `.native` for native-komponenten. Expo/React-Native (usikker på hvilken av de) velger da automatisk den komponenten som kan tilhører enheten som benyttes.
+Ettersom DatePicker(legg inn til hvilken pakke) kun fungerer på en "native" enhet, har vi opprettet en annen komponent for DatePicker som skal fungere på web. Begge komponentene har samme navn, men filnavnet inneholder `.native` for native-komponenten. React-Native velger da automatisk den komponenten som kan tilhører [enheten som brukes](https://reactnative.dev/docs/platform-specific-code#native-specific-extensions-ie-sharing-code-with-nodejs-and-web).
 
 ### Apollo client
 
