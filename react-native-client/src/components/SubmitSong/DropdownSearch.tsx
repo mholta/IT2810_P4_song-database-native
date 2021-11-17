@@ -119,6 +119,7 @@ const DropdownSearch = ({
         swipeDirection="down"
         onBackdropPress={closeModal}
         // style={styles.modal}
+        style={{ flexDirection: "row" }}
       >
         <View style={styles.container}>
           <FlatList
