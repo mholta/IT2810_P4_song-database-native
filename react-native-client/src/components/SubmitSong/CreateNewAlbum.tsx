@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Image, Text, View } from "react-native";
 import { makeStyles } from "react-native-elements";
-import { IconButton } from "react-native-paper";
+import { HelperText, IconButton } from "react-native-paper";
 import { setCoverImage, setReleaseDate, setTitle } from "./album/album.actions";
 import { AlbumState } from "./album/album.reducer";
 import DatePicker from "./DatePicker";
@@ -9,6 +9,12 @@ import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { ReactNativeFile } from "apollo-upload-client";
 import { TextInput } from "../generic/TextInput";
+import {
+  errorMessage,
+  ERROR_ALBUM,
+  ERROR_ALBUM_TITLE_NO_INPUT,
+  ERROR_IMAGE,
+} from "./song/song.error";
 
 interface CreateNewAlbumProps {
   state: AlbumState;
@@ -17,20 +23,22 @@ interface CreateNewAlbumProps {
   setDateCallback: (date: Date | null) => void;
   setDateAlbumError: React.Dispatch<boolean>;
   onDateErrorChange: (error: boolean) => void;
+  setInputError: React.Dispatch<string>;
+  inputError: string;
 }
 
 const CreateNewAlbum = ({
   state,
+  inputError,
+  setInputError,
   dispatch,
   setCreateNewAlbumModalOpen,
   setDateCallback,
-  setDateAlbumError,
   onDateErrorChange,
 }: CreateNewAlbumProps) => {
   const [dateOpen, setDateOpen] = useState(false);
   const styles = useStyles();
   const [coverURI, setCoverURI] = useState<string>("");
-
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -87,10 +95,20 @@ const CreateNewAlbum = ({
       <TextInput
         style={styles.inputSection}
         label="Tittel*"
-        onChangeText={(text) => dispatch(setTitle(text))}
+        onChangeText={(text) => {
+          dispatch(setTitle(text));
+          if (
+            inputError === ERROR_ALBUM_TITLE_NO_INPUT ||
+            inputError === ERROR_ALBUM
+          )
+            setInputError("");
+        }}
         value={state.title}
       />
-
+      {(inputError === ERROR_ALBUM_TITLE_NO_INPUT ||
+        inputError === ERROR_ALBUM) && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
       {/* Release date. Sets song release date after being chosen*/}
       <View style={[styles.inputSection]}>
         <DatePicker
@@ -109,11 +127,15 @@ const CreateNewAlbum = ({
         <Button onPress={openImagePickerAsync}>Last opp coverbilde</Button>
         {state.coverImage && (
           <Image
+            onLoad={() => inputError === ERROR_IMAGE && setInputError("")}
             source={{
               uri: coverURI,
             }}
             style={{ width: 300, height: 300, resizeMode: "cover" }}
           />
+        )}
+        {inputError === ERROR_IMAGE && (
+          <HelperText type="error">{errorMessage(inputError)}</HelperText>
         )}
       </View>
     </View>

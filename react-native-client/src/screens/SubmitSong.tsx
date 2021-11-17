@@ -25,13 +25,19 @@ import {
 import AlbumSearch from "../components/SubmitSong/AlbumSearch";
 import DatePicker from "../components/SubmitSong/DatePicker";
 import {
+  errorMessage,
   ERROR_ALBUM,
+  ERROR_ALBUM_NO_INPUT,
+  ERROR_ALBUM_TITLE_NO_INPUT,
+  ERROR_ARTIST,
+  ERROR_IMAGE,
   ERROR_KEY,
   ERROR_NETWORK,
   ERROR_RELEASE_DATE,
   ERROR_RELEASE_DATE_ALBUM,
   ERROR_TIME,
   ERROR_TITLE,
+  ERROR_TITLE_NO_INPUT,
   ERROR_UNKOWN,
 } from "../components/SubmitSong/song/song.error";
 import ContributorsWithPreview from "../components/SubmitSong/ContributorsWithPreview";
@@ -43,6 +49,7 @@ import ScrollContainer from "../components/generic/ScreenWrapper";
 import { TextInput } from "../components/generic/TextInput";
 import { CategoriesSelector } from "../components/SubmitSong/CategoriesSelector";
 import { FilterCategory } from "../redux/filter/filter.reducer";
+import { HelperText } from "react-native-paper";
 
 const SubmitSong = () => {
   const [songState, songDispatch] = useReducer(songReducer, initialSongState);
@@ -92,7 +99,7 @@ const SubmitSong = () => {
           iTunes: songState.appleMusicLink,
           key: songState.key,
           producers: songState.producersList,
-          releaseDate: songState.releaseDate, // TODO: Implement date picker in song
+          releaseDate: songState.releaseDate,
           spotify: songState.spotifyLink,
           tempo: songState.tempo,
           time: songState.time,
@@ -101,9 +108,7 @@ const SubmitSong = () => {
           file: albumState.coverImage,
           albumReleaseDate: albumState.releaseDate,
         },
-      })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+      });
     }
     return () => setSend(false);
   }, [send]);
@@ -126,13 +131,23 @@ const SubmitSong = () => {
       albumReleaseDate: albumState.releaseDate,
     }); */
     try {
+      if (songState.artists.length === 0) throw Error(ERROR_ARTIST);
+      if (createNewAlbumModalOpen && !albumState.title)
+        throw Error(ERROR_ALBUM_TITLE_NO_INPUT);
+      else if (!createNewAlbumModalOpen && !songState.albumId)
+        throw Error(ERROR_ALBUM_NO_INPUT);
+      if (createNewAlbumModalOpen && !albumState.coverImage)
+        throw Error(ERROR_IMAGE);
+      if (!songState.title) throw Error(ERROR_TITLE_NO_INPUT);
       if (songState.key) songDispatch(setKey(formatKey(songState.key)));
+      else throw Error(ERROR_KEY);
       if (songState.time) songDispatch(setTime(formatTime(songState.time)));
       if (!songState.releaseDate) throw Error(ERROR_RELEASE_DATE);
       if (dateError) throw Error(ERROR_RELEASE_DATE);
       if (dateAlbumError) throw Error(ERROR_RELEASE_DATE_ALBUM);
       setSend(true);
     } catch (err) {
+      console.log(err);
       if (err instanceof Error) setInputError(err.message);
       else {
         setInputError(ERROR_UNKOWN);
@@ -143,18 +158,32 @@ const SubmitSong = () => {
   return (
     <ScrollContainer>
       <ArtistSearch
-        setValueCallback={(value: string) => songDispatch(setMainArtist(value))}
+        setValueCallback={(value: string) => {
+          if (inputError === ERROR_ARTIST) setInputError("");
+          songDispatch(setMainArtist(value));
+        }}
       />
+      {inputError === ERROR_ARTIST && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
       {songState.mainArtistId !== "" &&
         songState.mainArtistId === artistId &&
         !createNewAlbumModalOpen && (
           <AlbumSearch
             artistId={songState.mainArtistId}
             setValueCallback={(value: string) => {
+              if (
+                inputError === ERROR_ALBUM_NO_INPUT ||
+                inputError === ERROR_ALBUM
+              )
+                setInputError("");
               songDispatch(setAlbumId(value));
             }}
             setDateCallback={(date: Date | string | number | null) => {
-              date && songDispatch(setSongReleaseDate(new Date(date)));
+              if (date) {
+                songDispatch(setSongReleaseDate(new Date(date)));
+                if (inputError === ERROR_RELEASE_DATE) setInputError("");
+              }
             }}
             setNewAlbumModalOpenCallback={() => {
               setCreateNewAlbumModalOpen(true);
@@ -167,10 +196,17 @@ const SubmitSong = () => {
         <CreateNewAlbum
           state={albumState}
           dispatch={albumDispatch}
+          setInputError={setInputError}
+          inputError={inputError}
           setDateAlbumError={setDateAlbumError}
           setDateCallback={(date: Date | null) => {
             if (!songState.releaseDate) {
               songDispatch(setSongReleaseDate(date));
+              if (
+                inputError === ERROR_RELEASE_DATE ||
+                inputError === ERROR_RELEASE_DATE_ALBUM
+              )
+                setInputError("");
             }
           }}
           setCreateNewAlbumModalOpen={setCreateNewAlbumModalOpen}
@@ -183,9 +219,14 @@ const SubmitSong = () => {
         style={styles.inputSection}
         label="Tittel*"
         onChangeText={(text) => songDispatch(setTitle(text))}
-        error={inputError === ERROR_TITLE}
+        error={
+          inputError === ERROR_TITLE || inputError === ERROR_TITLE_NO_INPUT
+        }
         value={songState.title}
       />
+      {(inputError === ERROR_TITLE || inputError === ERROR_TITLE_NO_INPUT) && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
 
       {/* Release date. Equal to album release date when choosing album */}
       <View style={styles.inputSection}>
@@ -215,6 +256,9 @@ const SubmitSong = () => {
         error={inputError === ERROR_KEY}
         value={songState.key}
       />
+      {inputError === ERROR_KEY && (
+        <HelperText type="error">{errorMessage(inputError)}</HelperText>
+      )}
 
       {/* Tempo */}
       <TextInput
