@@ -26,10 +26,12 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
       <ScrollView style={styles.scrollContainer}>
         {!loading && (
           <View style={styles.songInformation}>
-            <Image
-              source={{ uri: data.song.album.picture }}
-              style={styles.picture}
-            ></Image>
+            <View style={styles.imageWrapper}>
+              <Image
+                source={{ uri: data.song.album.picture }}
+                style={styles.picture}
+              ></Image>
+            </View>
             <P style={styles.title}>{data.song.title}</P>
             <P>
               {data.song.album.title} (
@@ -116,6 +118,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  imageWrapper: { maxWidth: 400, alignSelf: "center" },
   container: {
     flex: 1,
     alignItems: "center",
