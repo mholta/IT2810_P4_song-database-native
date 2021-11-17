@@ -91,7 +91,6 @@ const DropdownSearch = ({
             setModalVisible(false);
             setValueCallback(item._id);
             if (setDateCallback && item.releaseDate) {
-              console.log(item.releaseDate);
               setDateCallback(item.releaseDate);
             }
             setChosen(item[searchKey]);

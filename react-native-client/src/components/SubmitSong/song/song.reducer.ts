@@ -1,3 +1,4 @@
+import { FilterCategory } from "../../../types/api.types";
 import {
   SET_TITLE,
   SET_ALBUM_ID,
@@ -14,7 +15,6 @@ import {
   SET_MAIN_ARTIST,
   SET_RELEASE_DATE,
 } from "./song.actionTypes";
-import { FilterCategory } from "../../../types/api.types";
 
 export interface SongState {
   title: string;

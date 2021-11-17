@@ -5,11 +5,7 @@ import {
   TOGGLE_THEME_SELECTION,
 } from "./filter.actionTypes";
 import { SortOrder, SortType } from "../../components/search/SearchSorting";
-
-export interface FilterCategory {
-  _id: string;
-  title: string;
-}
+import { FilterCategory } from "../../types/api.types";
 
 export interface SortOptions {
   sortType: string;

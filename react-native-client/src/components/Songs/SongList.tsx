@@ -56,7 +56,7 @@ export const SongList = ({ navigation }: SongListProps) => {
   );
 
   const styles = useStyles();
-  console.log(data);
+
   return (
     <View style={styles.container}>
       <FlatList

@@ -7,6 +7,7 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { Box } from "../components/generic/Box";
 import { P } from "../components/generic/Text";
 import { IconButton } from "../components/generic/IconButton";
+import { Artist, FilterCategory } from "../types/api.types";
 
 interface SongScreenProps {
   route: any;
@@ -36,13 +37,15 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
             <P>
               {data.song.album.title} (
               {new Date(data.song.album.releaseDate).getFullYear()}) -{" "}
-              {data.song.artists.map((a: any) => a.name).join(", ")}
+              {data.song.artists.map((a: Artist) => a.name).join(", ")}
             </P>
             {data.song.categories.length > 0 && (
               <Box>
                 <P style={styles.infoBoxTitle}>Tema: </P>
                 <P>
-                  {data.song.categories.map((c: any) => c.title).join(", ")}
+                  {data.song.categories
+                    .map((c: FilterCategory) => c.title)
+                    .join(", ")}
                 </P>
               </Box>
             )}

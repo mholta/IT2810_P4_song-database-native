@@ -43,9 +43,9 @@ import { useMutation, gql, useApolloClient } from "@apollo/client";
 import ScrollContainer from "../generic/ScreenWrapper";
 import { TextInput } from "../generic/TextInput";
 import { CategoriesSelect } from "./CategoriesSelect";
-import { FilterCategory } from "../../redux/filter/filter.reducer";
 import { HelperText } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
+import { FilterCategory } from "../../types/api.types";
 
 interface SubmitSongProps {
   navigation: any;
@@ -63,10 +63,8 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [
-    createNewAlbumModalOpen,
-    setCreateNewAlbumModalOpen,
-  ] = useState<boolean>(false);
+  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
+    useState<boolean>(false);
   const client = useApolloClient();
 
   useEffect(() => {

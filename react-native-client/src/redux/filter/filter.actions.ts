@@ -1,11 +1,11 @@
 import { SortOptions } from "./filter.reducer";
-import { FilterCategory } from "./filter.reducer";
 import {
   SET_ALL_THEMES,
   SET_SEARCH_STRING,
   SET_SORT_OPTIONS,
   TOGGLE_THEME_SELECTION,
 } from "./filter.actionTypes";
+import { FilterCategory } from "../../types/api.types";
 
 export const setAllThemes = (themes: FilterCategory[]) => ({
   type: SET_ALL_THEMES,

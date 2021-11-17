@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { Chip } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { FilterCategory } from "../../redux/filter/filter.reducer";
+import { FilterCategory } from "../../types/api.types";
 import { H2 } from "../generic/Text";
 
 interface CategoriesProps {

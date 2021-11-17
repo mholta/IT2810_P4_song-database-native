@@ -10,7 +10,7 @@ import { Chip } from "react-native-paper";
 import Modal from "react-native-modal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
-import { FilterCategory } from "../../redux/filter/filter.reducer";
+import { FilterCategory } from "../../types/api.types";
 
 interface CategoriesSelectProps {
   onChangeSelection: Function;
