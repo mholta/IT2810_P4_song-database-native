@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   bottomContainer: {
-    position: "absolute",
+    position: "relative",
     bottom: 0,
     left: 0,
     height: 60,
