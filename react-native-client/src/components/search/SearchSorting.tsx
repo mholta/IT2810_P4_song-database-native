@@ -15,13 +15,6 @@ const SearchSorting = ({}: SearchSortingProps) => {
   const sortOptionsRedux: SortOptions = useSelector(
     (rootState: RootState) => rootState.filter.sortOptions
   );
-  const currentSortOptionString: string = getSortOptionFromTypeAndOrder(
-    sortOptionsRedux.sortType as SortType,
-    sortOptionsRedux.order as SortOrder
-  )
-    .displayName.split("")
-    .map((e, i) => (i ? e : e.toLowerCase()))
-    .join("");
 
   const dispatch = useDispatch();
 
@@ -34,6 +27,14 @@ const SearchSorting = ({}: SearchSortingProps) => {
   const options: SortOptionWithDisplayName[] = showRelevanceSortOption
     ? [relevanceSortOption, ...sortOptions]
     : [...sortOptions];
+
+  const currentSortOptionString: string = getSortOptionFromTypeAndOrder(
+    (sortOptionsRedux?.sortType ?? options[0].sortType) as SortType,
+    (sortOptionsRedux?.order ?? options[0].order) as SortOrder
+  )
+    .displayName.split("")
+    .map((e, i) => (i ? e : e.toLowerCase()))
+    .join("");
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -51,10 +52,18 @@ const SearchSorting = ({}: SearchSortingProps) => {
       {isOpen && (
         <View style={styles.modal}>
           <Picker
-            selectedValue={sortOptionObjectToString(sortOptionsRedux)}
+            selectedValue={
+              sortOptionsRedux
+                ? sortOptionObjectToString(sortOptionsRedux)
+                : sortOptionObjectToString(options[0])
+            }
             onValueChange={(itemValue: string) => {
               dispatch(
-                setSortOptions(typeAndOrderFromSortOptionString(itemValue))
+                setSortOptions(
+                  itemValue === "relevance--desc"
+                    ? null
+                    : typeAndOrderFromSortOptionString(itemValue)
+                )
               );
             }}
           >
@@ -105,9 +114,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   bottomContainer: {
+    position: "absolute",
     bottom: 0,
     left: 0,
-    flexShrink: 0,
+    height: 60,
+    flexGrow: 0,
     width: "100%",
     padding: theme.layout?.padding?.screen,
   },
@@ -129,6 +140,7 @@ export enum SortType {
 
 interface SortOptionWithDisplayName extends SortOptions {
   displayName: string;
+  isDefaultValue?: boolean;
 }
 
 export enum SortOrder {

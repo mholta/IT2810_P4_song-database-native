@@ -10,6 +10,7 @@ const SearchFilterWrapper = () => {
   const [dropdownIsOpen, setFilterMenuDropdownIsOpen] = useState<boolean>(true);
   const openDropdown = () => setFilterMenuDropdownIsOpen(true);
   const closeDropdown = () => setFilterMenuDropdownIsOpen(false);
+
   return (
     <View
       style={[[styles.container, { height: dropdownIsOpen ? "100%" : "auto" }]]}
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   topBarContainer: {
     top: 0,
     left: 0,
-    flexShrink: 0,
+    height: 66,
     display: "flex",
     flexDirection: "row",
     backgroundColor: theme.colors?.grey3,

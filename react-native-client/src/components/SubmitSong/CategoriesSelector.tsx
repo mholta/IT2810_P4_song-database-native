@@ -23,7 +23,7 @@ interface CategoriesSelectorProps {
 export const CategoriesSelector = (props: CategoriesSelectorProps) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
     FilterCategory[]
   >([]);

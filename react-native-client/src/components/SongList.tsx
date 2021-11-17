@@ -70,6 +70,7 @@ export const SongList = ({ navigation }: SongListProps) => {
         keyExtractor={(item) => item._id}
         onEndReached={loadNextPage}
         onEndReachedThreshold={0.25}
+        contentContainerStyle={{ paddingBottom: 80 }}
       />
     </View>
   );
@@ -77,6 +78,7 @@ export const SongList = ({ navigation }: SongListProps) => {
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    marginTop: 66,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
