@@ -1,7 +1,12 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useQuery, DocumentNode } from "@apollo/client";
-import { Text, FlatList, View, StyleSheet, ListRenderItem } from "react-native";
+import {
+  FlatList,
+  View,
+  ListRenderItem,
+  useWindowDimensions,
+} from "react-native";
 import Modal from "react-native-modal";
 import { SearchBar, Button, makeStyles, useTheme } from "react-native-elements";
 
@@ -114,13 +119,7 @@ const DropdownSearch = ({
         onPress={openModal}
       />
 
-      <Modal
-        isVisible={modalVisible}
-        swipeDirection="down"
-        onBackdropPress={closeModal}
-        // style={styles.modal}
-        style={{ flexDirection: "row" }}
-      >
+      <Modal isVisible={modalVisible} onBackdropPress={closeModal}>
         <View style={styles.container}>
           <FlatList
             ListHeaderComponent={
@@ -137,7 +136,6 @@ const DropdownSearch = ({
                   setVariable({ ...variable, [searchKey]: newInputValue });
                 }}
                 round={false}
-                // lightTheme={true}
                 onFocus={openModal}
                 onBlur={openModal}
                 clearButtonMode={"always"}
@@ -154,6 +152,7 @@ const DropdownSearch = ({
             ItemSeparatorComponent={seperator}
             onEndReached={loadMore}
             onEndReachedThreshold={0.25}
+            style={{ width: useWindowDimensions().width * 0.8 }}
           ></FlatList>
           {noOptionsComponent}
         </View>
@@ -169,10 +168,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     top: 20,
     marginBottom: 20,
-    // width: "80%",
     position: "relative",
     alignSelf: "center",
-    // padding: "1px",
     borderRadius: 10,
     backgroundColor: theme.colors?.background,
   },
@@ -183,7 +180,6 @@ const useStyles = makeStyles((theme) => ({
     height: 20,
     padding: 12,
     color: theme.colors?.text,
-    // backgroundColor: theme.colors?.background,
   },
   item: {
     margin: 20,
