@@ -11,7 +11,6 @@ import { ColorSchemeName, Pressable } from "react-native";
 
 import { baseColors } from "../utils/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import InfoScreen from "../screens/InfoScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SongScreen from "../screens/SongScreen";
 import SongsScreen from "../screens/SongsScreen";
@@ -55,9 +54,6 @@ const RootNavigator = () => (
       component={NotFoundScreen}
       options={{ title: "Ikke funnet" }}
     />
-    <Stack.Group screenOptions={{ presentation: "modal" }}>
-      <Stack.Screen name="Info" component={InfoScreen} />
-    </Stack.Group>
   </Stack.Navigator>
 );
 
@@ -83,21 +79,6 @@ const BottomTabNavigator = () => {
         options={({ navigation }: RootTabScreenProps<"SongsTab">) => ({
           title: "Sanger",
           tabBarIcon: ({ color }) => <TabBarIcon name="music" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate("Info")}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={baseColors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
         })}
       />
       <BottomTab.Screen
