@@ -15,6 +15,7 @@ import {
   ERROR_ALBUM_TITLE_NO_INPUT,
   ERROR_IMAGE,
 } from "./song/song.error";
+import { H2 } from "../generic/Text";
 
 interface CreateNewAlbumProps {
   state: AlbumState;
@@ -82,8 +83,8 @@ const CreateNewAlbum = ({
 
   return (
     <View>
-      <View>
-        <Text style={styles.title}>Opprett nytt album</Text>
+      <View style={styles.topWrapperFlex}>
+        <H2 style={styles.title}>Opprett nytt album</H2>
         <IconButton
           icon="window-close"
           onPress={() => setCreateNewAlbumModalOpen(false)}
@@ -157,6 +158,11 @@ const useStyles = makeStyles((theme) => ({
   },
   inputSection: {
     marginVertical: theme.layout?.space?.small,
+  },
+  topWrapperFlex: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 }));
 
