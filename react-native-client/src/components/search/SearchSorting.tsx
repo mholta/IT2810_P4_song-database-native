@@ -1,7 +1,7 @@
 import { Picker } from "@react-native-picker/picker";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Button, makeStyles, useTheme } from "react-native-elements";
-import { Animated, TouchableWithoutFeedback, View } from "react-native";
+import { TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
@@ -35,32 +35,7 @@ const SearchSorting = ({}: SearchSortingProps) => {
     ? [relevanceSortOption, ...sortOptions]
     : [...sortOptions];
 
-  const [isOpen, setIsOpen] = useState<boolean>(true);
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      duration: 5000,
-    }).start();
-  };
-
-  const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 3 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      useNativeDriver: true,
-      duration: 300,
-    }).start();
-  };
-
-  useEffect(() => {
-    if (isOpen) fadeIn();
-    else fadeOut();
-  }, [isOpen]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <View style={[styles.container, { height: isOpen ? "100%" : "auto" }]}>
@@ -100,7 +75,9 @@ const SearchSorting = ({}: SearchSortingProps) => {
         style={[
           styles.bottomContainer,
           {
-            backgroundColor: isOpen ? "rgba(20,20,20,1)" : "rgba(20,20,20,0.9)",
+            backgroundColor: isOpen
+              ? theme.colors?.barSolid
+              : theme.colors?.barTransparent,
           },
         ]}
       >
@@ -130,17 +107,16 @@ const useStyles = makeStyles((theme) => ({
   bottomContainer: {
     bottom: 0,
     left: 0,
-    height: 60,
+    flexShrink: 0,
     width: "100%",
-    backgroundColor: "rgba(20,20,20,0.9)",
     padding: theme.layout?.padding?.screen,
   },
   modal: {
-    backgroundColor: "rgba(20,20,20,1)",
+    backgroundColor: theme.colors?.dropdown,
   },
   backdrop: {
     flexGrow: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: theme.colors?.backdrop,
   },
 }));
 

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useState } from "react";
+import { ScrollView, Text, View } from "react-native";
 import {
   makeStyles,
   useTheme,
   Button,
   ButtonProps,
-} from 'react-native-elements';
-import { Chip } from 'react-native-paper';
-import Modal from 'react-native-modal';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux';
-import { FilterCategory } from '../../redux/filter/filter.reducer';
+} from "react-native-elements";
+import { Chip } from "react-native-paper";
+import Modal from "react-native-modal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
+import { FilterCategory } from "../../redux/filter/filter.reducer";
 
 interface CategoriesSelectorProps {
   onChangeSelection: Function;
@@ -23,7 +23,7 @@ interface CategoriesSelectorProps {
 export const CategoriesSelector = (props: CategoriesSelectorProps) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<
     FilterCategory[]
   >([]);
@@ -55,13 +55,14 @@ export const CategoriesSelector = (props: CategoriesSelectorProps) => {
         style={styles.button}
       />
 
-      <View style={styles.categoryList}>
+      <View style={styles.selectedCategoriesList}>
         {selectedCategories.map((category, index) => (
           <Chip
-            key={'category' + index}
+            key={"category" + index}
             mode="flat"
-            style={styles.categoryListItem}
+            style={styles.selectedCategoryItem}
             onClose={() => addRemoveCategory(category, true)}
+            textStyle={{ color: theme.colors?.text }}
           >
             {category.title}
           </Chip>
@@ -73,28 +74,31 @@ export const CategoriesSelector = (props: CategoriesSelectorProps) => {
         swipeDirection="down"
         onBackdropPress={() => setModalVisible(false)}
       >
-        {allCategories.map((category, index) => {
-          const isSelected = selectedCategories.includes(category);
+        <View style={styles.allCategoriesList}>
+          {allCategories.map((category, index) => {
+            const isSelected = selectedCategories.includes(category);
 
-          return (
-            <Chip
-              key={'category' + index}
-              mode="outlined"
-              selected={isSelected}
-              onPress={() => addRemoveCategory(category, isSelected)}
-              style={[
-                styles.categoryButton,
-                {
-                  backgroundColor: isSelected
-                    ? theme.colors?.primary
-                    : theme.colors?.background,
-                },
-              ]}
-            >
-              {category.title}
-            </Chip>
-          );
-        })}
+            return (
+              <Chip
+                key={"category" + index}
+                mode="outlined"
+                selected={isSelected}
+                onPress={() => addRemoveCategory(category, isSelected)}
+                style={[
+                  styles.categoryButton,
+                  {
+                    backgroundColor: isSelected
+                      ? theme.colors?.primary
+                      : theme.colors?.background,
+                  },
+                ]}
+                textStyle={{ color: theme.colors?.text }}
+              >
+                {category.title}
+              </Chip>
+            );
+          })}
+        </View>
       </Modal>
     </View>
   );
@@ -110,16 +114,19 @@ const useStyles = makeStyles((theme) => ({
     margin: 5,
     backgroundColor: theme.colors?.background,
   },
+  allCategoriesList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   categoryButton: {
     margin: 5,
+    height: 32,
   },
-  categoryList: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    position: 'relative',
+  selectedCategoriesList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
-  categoryListItem: {
+  selectedCategoryItem: {
     margin: 5,
     color: theme.colors?.text,
     backgroundColor: theme.colors?.grey0,

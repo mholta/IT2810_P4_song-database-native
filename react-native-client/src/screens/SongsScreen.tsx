@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "react-native-elements";
 import SearchFilterWrapper from "../components/search/SearchFilterWrapper";
 import { SongList } from "../components/SongList";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { RootTabScreenProps } from "../types";
 import SearchSorting from "../components/search/SearchSorting";
 

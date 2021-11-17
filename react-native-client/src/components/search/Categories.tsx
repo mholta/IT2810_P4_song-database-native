@@ -45,11 +45,13 @@ const Categories = ({
               style={[
                 styles.categoryButton,
                 {
+                  flexShrink: 0,
                   backgroundColor: isSelected
                     ? theme.colors?.primary
                     : theme.colors?.background,
                 },
               ]}
+              textStyle={{ flexGrow: 0 }}
             >
               {category.title}
             </Chip>
@@ -68,6 +70,7 @@ const useStyles = makeStyles({
     margin: -5,
     position: "relative",
     zIndex: -1,
+    flexShrink: 0,
   },
   categoryButton: {
     margin: 5,

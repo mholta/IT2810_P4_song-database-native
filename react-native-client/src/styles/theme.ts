@@ -20,6 +20,10 @@ declare module "react-native-elements" {
     text: string;
     textFaded: string;
     background: string;
+    backdrop: string;
+    dropdown: string;
+    barTransparent: string;
+    barSolid: string;
   }
 
   export interface FullTheme {
@@ -36,6 +40,10 @@ const mainTheme: Theme = {
     text: "black",
     textFaded: "#333",
     background: "#fff",
+    backdrop: "rgba(0,0,0,0.4)",
+    barTransparent: "rgba(20,20,20,0.9)",
+    barSolid: "rgba(20,20,20,1)",
+    dropdown: "#333",
   },
   layout: {
     borderRadius: { default: 10, large: 15, small: 5 },
@@ -57,7 +65,7 @@ const mainTheme: Theme = {
 
 const lightThemeColors: Theme = {
   colors: {
-    grey0: "#000",
+    grey0: "#bbb",
     grey1: "#222",
     grey2: "#888",
     grey3: "#ddd",
@@ -68,6 +76,9 @@ const lightThemeColors: Theme = {
     text: "#060606",
     textFaded: "#333",
     background: "#fff",
+    dropdown: "#bbb",
+    barTransparent: "rgba(240,240,240,0.98)",
+    barSolid: "rgba(240,240,240,1)",
   },
 };
 
@@ -84,6 +95,7 @@ const darkThemeColors: Theme = {
     text: "#eaeaea",
     textFaded: "#aaa",
     background: "#040404",
+    dropdown: "#1a1a1a",
   },
 };
 
