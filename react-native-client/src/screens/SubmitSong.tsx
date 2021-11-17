@@ -37,7 +37,7 @@ import {
 import ContributorsWithPreview from "../components/SubmitSong/ContributorsWithPreview";
 import { Button, makeStyles } from "react-native-elements";
 import CreateNewAlbum from "../components/SubmitSong/CreateNewAlbum";
-import { formatKey, formatTime } from "../utils/inputChecks";
+import { formatKey, formatTime } from "../utils/inputCheck";
 import { useMutation, gql } from "@apollo/client";
 import ScrollContainer from "../components/generic/ScreenWrapper";
 import { TextInput } from "../components/generic/TextInput";
@@ -55,8 +55,10 @@ const SubmitSong = () => {
   const [dateAlbumError, setDateAlbumError] = useState(false);
   const [send, setSend] = useState(false);
   const [artistId, setArtistId] = useState("");
-  const [createNewAlbumModalOpen, setCreateNewAlbumModalOpen] =
-    useState<boolean>(false);
+  const [
+    createNewAlbumModalOpen,
+    setCreateNewAlbumModalOpen,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     setArtistId(songState.mainArtistId);
