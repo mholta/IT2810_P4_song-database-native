@@ -173,6 +173,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         }}
       />
       {inputError === ERROR_ARTIST && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
       {songState.mainArtistId !== "" &&
@@ -234,6 +235,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         value={songState.title}
       />
       {(inputError === ERROR_TITLE || inputError === ERROR_TITLE_NO_INPUT) && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
 
@@ -266,6 +268,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         value={songState.key}
       />
       {inputError === ERROR_KEY && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
 
@@ -279,6 +282,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         keyboardType="numeric"
       />
       {inputError === ERROR_TEMPO && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
 
@@ -292,6 +296,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
         value={songState.time}
       />
       {inputError === ERROR_TIME && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
 

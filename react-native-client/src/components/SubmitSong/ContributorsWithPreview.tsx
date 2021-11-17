@@ -37,6 +37,7 @@ const ContributorsWithPreview = ({
         onChangeText={onChangeText}
         value={valueString}
       />
+      {/* @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html */}
       <HelperText>{helperText}</HelperText>
       <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
         {valueList

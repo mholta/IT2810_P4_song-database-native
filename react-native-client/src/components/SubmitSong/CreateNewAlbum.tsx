@@ -41,8 +41,7 @@ const CreateNewAlbum = ({
   const styles = useStyles();
   const [coverURI, setCoverURI] = useState<string>("");
   let openImagePickerAsync = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
       alert("Permission to access camera roll is required!");
@@ -107,6 +106,7 @@ const CreateNewAlbum = ({
       />
       {(inputError === ERROR_ALBUM_TITLE_NO_INPUT ||
         inputError === ERROR_ALBUM) && (
+        // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
         <HelperText type="error">{errorMessage(inputError)}</HelperText>
       )}
       {/* Release date. Sets song release date after being chosen*/}
@@ -135,6 +135,7 @@ const CreateNewAlbum = ({
           />
         )}
         {inputError === ERROR_IMAGE && (
+          // @ts-ignore Following docs but still getting type-error. Possibly error in types https://callstack.github.io/react-native-paper/helper-text.html
           <HelperText type="error">{errorMessage(inputError)}</HelperText>
         )}
       </View>
