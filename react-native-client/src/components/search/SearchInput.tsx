@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, SearchBar, useTheme } from "react-native-elements";
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
 import { setSearchString } from "../../redux/filter/filter.actions";
@@ -13,18 +13,21 @@ const SearchInput = () => {
   );
   const dispatch = useDispatch();
 
-  const [localSearchString, setLocalSearchString] =
-    useState<string>(searchString);
+  const [localSearchString, setLocalSearchString] = useState<string>(
+    searchString
+  );
 
   const triggerSearch = () => {
-    dispatch(setSearchString(localSearchString));
     const newSortOption: SortOptions | null = localSearchString
       ? null
       : {
           order: SortOrder.DESC,
           sortType: SortType.RELEASE_DATE,
         };
-    dispatch(setSortOptions(newSortOption));
+    batch(() => {
+      dispatch(setSortOptions(newSortOption));
+      dispatch(setSearchString(localSearchString));
+    });
   };
 
   useEffect(() => {

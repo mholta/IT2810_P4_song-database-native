@@ -29,7 +29,6 @@ export const SongList = ({ navigation }: SongListProps) => {
       sortOptions: sortOptions,
     },
   };
-
   const { data, previousData, fetchMore } = useQuery(GET_SEARCH_RESULTS, {
     ...options,
     variables: {
@@ -38,16 +37,13 @@ export const SongList = ({ navigation }: SongListProps) => {
       page: 1,
     },
   });
-  const [loadedPageNum, setLoadedPageNum] = React.useState<number>(1);
-
   const loadNextPage = () => {
-    if (loadedPageNum < (data?.songs?.pages ?? 1)) {
+    if (Math.ceil(data.songs.songs.length / 20) < (data?.songs?.pages ?? 1)) {
       fetchMore({
         variables: {
-          page: loadedPageNum + 1,
+          page: Math.ceil(data.songs.songs.length / 20) + 1,
         },
       });
-      setLoadedPageNum(loadedPageNum + 1);
     }
   };
 
@@ -60,7 +56,7 @@ export const SongList = ({ navigation }: SongListProps) => {
   );
 
   const styles = useStyles();
-
+  console.log(data);
   return (
     <View style={styles.container}>
       <FlatList
