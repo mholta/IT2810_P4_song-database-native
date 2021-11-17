@@ -1,7 +1,7 @@
-import { Picker } from "@react-native-picker/picker";
+import { Picker as RNPicker, PickerProps } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import { Button, makeStyles, useTheme } from "react-native-elements";
-import { TouchableWithoutFeedback, View } from "react-native";
+import { Platform, TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { setSortOptions } from "../../redux/filter/filter.actions";
@@ -38,47 +38,83 @@ const SearchSorting = ({}: SearchSortingProps) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  return (
-    <View style={[styles.container, { height: isOpen ? "100%" : "auto" }]}>
-      {/* Backdrop */}
-      <TouchableWithoutFeedback
-        style={[styles.backdrop, { display: isOpen ? "flex" : "none" }]}
-        onPress={() => setIsOpen(false)}
-      >
-        <View style={styles.backdrop}></View>
-      </TouchableWithoutFeedback>
+  const isIos: boolean = Platform.OS === "ios";
 
-      {/* Picker */}
-      {isOpen && (
-        <View style={styles.modal}>
-          <Picker
-            selectedValue={
-              sortOptionsRedux
-                ? sortOptionObjectToString(sortOptionsRedux)
-                : sortOptionObjectToString(options[0])
-            }
-            onValueChange={(itemValue: string) => {
-              dispatch(
-                setSortOptions(
-                  itemValue === "relevance--desc"
-                    ? null
-                    : typeAndOrderFromSortOptionString(itemValue)
-                )
-              );
+  const Picker = (props: PickerProps) => (
+    <RNPicker
+      {...props}
+      selectedValue={
+        sortOptionsRedux
+          ? sortOptionObjectToString(sortOptionsRedux)
+          : sortOptionObjectToString(options[0])
+      }
+      onValueChange={(itemValue: string) => {
+        dispatch(
+          setSortOptions(
+            itemValue === "relevance--desc"
+              ? null
+              : typeAndOrderFromSortOptionString(itemValue)
+          )
+        );
+      }}
+    >
+      {options.map((option: SortOptionWithDisplayName, i) => (
+        <RNPicker.Item
+          key={"sort-option-" + i}
+          label={option.displayName}
+          color={theme.colors?.text}
+          value={sortOptionObjectToString(option)}
+        />
+      ))}
+    </RNPicker>
+  );
+
+  if (isIos)
+    return (
+      <View style={[styles.container, { height: isOpen ? "100%" : "auto" }]}>
+        {/* Backdrop */}
+        <TouchableWithoutFeedback
+          style={[styles.backdrop, { display: isOpen ? "flex" : "none" }]}
+          onPress={() => setIsOpen(false)}
+        >
+          <View style={styles.backdrop}></View>
+        </TouchableWithoutFeedback>
+
+        {/* Picker in modal */}
+        {isOpen && (
+          <View style={styles.modal}>
+            <Picker />
+          </View>
+        )}
+
+        {/* Bottom button */}
+        <View
+          style={[
+            styles.bottomContainer,
+            {
+              backgroundColor: isOpen
+                ? theme.colors?.barSolid
+                : theme.colors?.barTransparent,
+            },
+          ]}
+        >
+          <Button
+            type="clear"
+            onPress={() => setIsOpen(!isOpen)}
+            title={isOpen ? "Lukk" : "Sorterer på " + currentSortOptionString}
+            style={{
+              alignItems: "flex-end",
             }}
-          >
-            {options.map((option: SortOptionWithDisplayName, i) => (
-              <Picker.Item
-                key={"sort-option-" + i}
-                label={option.displayName}
-                color={theme.colors?.text}
-                value={sortOptionObjectToString(option)}
-              />
-            ))}
-          </Picker>
+          />
         </View>
-      )}
+      </View>
+    );
 
+  if (isOpen) setIsOpen(false);
+
+  /* Else */
+  return (
+    <View style={[styles.container, { height: "auto" }]}>
       {/* Bottom button */}
       <View
         style={[
@@ -90,12 +126,12 @@ const SearchSorting = ({}: SearchSortingProps) => {
           },
         ]}
       >
-        <Button
-          type="clear"
-          onPress={() => setIsOpen(!isOpen)}
-          title={isOpen ? "Lukk" : "Sorterer på " + currentSortOptionString}
+        <Picker
           style={{
-            alignItems: "flex-end",
+            color:
+              Platform.OS === "web"
+                ? theme.colors?.background
+                : theme.colors?.text,
           }}
         />
       </View>
@@ -121,6 +157,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 0,
     width: "100%",
     padding: theme.layout?.padding?.screen,
+    display: "flex",
+    justifyContent: "center",
   },
   modal: {
     backgroundColor: theme.colors?.dropdown,
