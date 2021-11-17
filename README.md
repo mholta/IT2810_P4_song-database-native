@@ -48,6 +48,9 @@ Vi har valgt å bruke [React Native Elements](https://reactnativeelements.com/) 
 
 Vi har implementert to theme-objekter som inneholder style-valg for eksempelvis layout og farger. Når appen starter sjekker vi om enheten er i mørk eller lys modus og angir at elementer fra react-native-elements skal bruke denne themen. Vi valgte å ikke implementere mørk modus med react-native-elements sin innebygde 'useDark' prop siden den ikke endret farger når vi byttet mellom mørk og lys modus. I tillegg gir dette oss mer fleksibilitet i fargevalg for hver modus.
 
+![Dark Mode](images/darkmode.png)
+![Light Mode](images/lightmode.png)
+
 For å sortere listen brukes native "pickers" for web, android og ios. Disse ser litt ulike ut. Det er derfor implementert en modal-versjon for IOS og en direkte aksess av pickeren for android og ios. Siden expo ikke setter CSS-attributtet "color-scheme: dark" på web er det satt to ulike tekstfarger på pickeren for web og android. Tekstfargen på web må altså være svart da color-scheme ikke pickeren derfor fortsatt får hvit bakgrunn.
 
 ### Oppdatering av backend
