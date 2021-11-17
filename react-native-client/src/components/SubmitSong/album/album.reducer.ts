@@ -1,3 +1,4 @@
+import { ReactNativeFile } from "extract-files";
 import {
   SET_TITLE,
   SET_MAIN_ARTIST,
@@ -9,7 +10,7 @@ export interface AlbumState {
   title: string;
   releaseDate: Date;
   mainArtistId: string; // id of main artist
-  coverImage: any;
+  coverImage: File | ReactNativeFile | undefined;
 }
 
 export const initialAlbumState: AlbumState = {

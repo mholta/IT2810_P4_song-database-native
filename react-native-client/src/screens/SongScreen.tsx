@@ -10,12 +10,11 @@ import { IconButton } from "../components/generic/IconButton";
 import { Artist, FilterCategory } from "../types/api.types";
 
 interface SongScreenProps {
-  route: any;
-  navigation: any;
+  route: { params: { songId: string } };
 }
 
-export default function SongScreen({ route, navigation }: SongScreenProps) {
-  const { data, loading, error } = useQuery(GET_SONG_DATA, {
+const SongScreen = ({ route }: SongScreenProps) => {
+  const { data, loading } = useQuery(GET_SONG_DATA, {
     variables: { id: route.params.songId },
   });
 
@@ -118,7 +117,7 @@ export default function SongScreen({ route, navigation }: SongScreenProps) {
       </ScrollView>
     </View>
   );
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   imageWrapper: { maxWidth: 400, alignSelf: "center" },
@@ -206,3 +205,5 @@ export const GET_SONG_DATA = gql`
     }
   }
 `;
+
+export default SongScreen;

@@ -1,9 +1,10 @@
+import { ReactNativeFile } from "apollo-upload-client";
 import {
   SET_TITLE,
   SET_RELEASE_DATE,
   SET_MAIN_ARTIST,
   SET_COVER_IMAGE,
-} from './album.actionTypes';
+} from "./album.actionTypes";
 
 export const setTitle = (title: string) => ({
   type: SET_TITLE,
@@ -20,7 +21,9 @@ export const setReleaseDate = (releaseDate: Date | null) => ({
   payload: { releaseDate },
 });
 
-export const setCoverImage = (coverImage: any) => ({
+export const setCoverImage = (
+  coverImage: File | ReactNativeFile | undefined
+) => ({
   type: SET_COVER_IMAGE,
   payload: { coverImage },
 });

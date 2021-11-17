@@ -6,9 +6,11 @@ import { SongListItem } from "./SongList.Item";
 import { RootState } from "../../redux";
 import { SortOptions } from "../../redux/filter/filter.reducer";
 import { makeStyles } from "react-native-elements";
+import { NavigationProp, ParamListBase } from "@react-navigation/core";
+import { Song } from "../../types/api.types";
 
 interface SongListProps {
-  navigation: any;
+  navigation: NavigationProp<ParamListBase>;
 }
 
 export const SongList = ({ navigation }: SongListProps) => {
@@ -47,7 +49,7 @@ export const SongList = ({ navigation }: SongListProps) => {
     }
   };
 
-  const renderItem = ({ item }: { item: any }) => (
+  const renderItem = ({ item }: { item: Song }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("SongScreen", { songId: item._id })}
     >

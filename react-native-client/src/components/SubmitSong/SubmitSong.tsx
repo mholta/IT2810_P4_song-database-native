@@ -46,9 +46,10 @@ import { CategoriesSelect } from "./CategoriesSelect";
 import { HelperText } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
 import { FilterCategory } from "../../types/api.types";
+import { NavigationProp, ParamListBase } from "@react-navigation/core";
 
 interface SubmitSongProps {
-  navigation: any;
+  navigation: NavigationProp<ParamListBase>;
 }
 
 const SubmitSong = ({ navigation }: SubmitSongProps) => {
@@ -135,7 +136,7 @@ const SubmitSong = ({ navigation }: SubmitSongProps) => {
     }, 500);
   }
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (_: any) => {
     try {
       if (songState.artists.length === 0) throw Error(ERROR_ARTIST);
       if (createNewAlbumModalOpen && !albumState.title)
