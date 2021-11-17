@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from "react";
-import { View, Platform, Button } from "react-native";
+import { View, Platform } from "react-native";
 import NativeDatePicker from "@react-native-community/datetimepicker";
 import { DatePickerProps } from "./DatePicker";
+import { Button } from "react-native-elements";
 
-const DatePicker = ({ onChange, value }: DatePickerProps) => {
+const DatePicker = ({ onChange, value, label }: DatePickerProps) => {
   const isIos = Platform.OS === "ios";
 
   const [show, setShow] = useState(isIos);
@@ -14,7 +15,11 @@ const DatePicker = ({ onChange, value }: DatePickerProps) => {
       {!isIos && (
         <Button
           onPress={() => setShow(true)}
-          title={value?.toLocaleDateString() ?? "Velg utgivelsesdato"}
+          title={
+            value?.toLocaleDateString()
+              ? label + ": " + value.toLocaleDateString()
+              : "Velg " + label.toLowerCase()
+          }
         />
       )}
       {show && (
